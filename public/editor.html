@@ -639,10 +639,10 @@ function clicked() {
 
         async function logout() {
             if (await openConfirm('Log Out', 'Are you sure?')) {
-                window.location.href = 'login.html';
+                localStorage.removeItem('shamim_user');
+                window.location.href = '/';
             }
         }
-
         // Init
         updateLineNumbers(editors.html);
         runCodeManual(); // Initial run
