@@ -1,0 +1,17 @@
+{
+    "free": {
+        "price": 0,
+        "duration": 365,
+        "storage": 100
+    },
+    "pro": {
+        "price": 10,
+        "duration": 30,
+        "storage": 512
+    },
+    "vip": {
+        "price": 25,
+        "duration": 30,
+        "storage": 2048
+    }
+}

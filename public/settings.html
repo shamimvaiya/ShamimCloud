@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings | Shamim Cloud</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: { dark: '#030712', card: '#1e293b', primary: '#7c3aed', secondary: '#db2777' },
+                    fontFamily: { sans: ['Outfit', 'sans-serif'] }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
+
+        body {
+            background-color: #030712;
+            background-image: radial-gradient(at 0% 0%, rgba(124, 58, 237, 0.1) 0px, transparent 50%), radial-gradient(at 100% 100%, rgba(219, 39, 119, 0.1) 0px, transparent 50%);
+            color: #e2e8f0;
+            font-family: 'Outfit', sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* GLASS EFFECT */
+        .glass {
+            background: rgba(30, 41, 59, 0.4);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .glass-card {
+            background: rgba(30, 41, 59, 0.4);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: transform 0.3s ease, border-color 0.3s ease;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(124, 58, 237, 0.3);
+            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+        }
+
+        /* MOBILE MENU */
+        #mobileMenu {
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .menu-open {
+            transform: translateX(0) !important;
+        }
+
+        .menu-closed {
+            transform: translateX(-100%) !important;
+        }
+
+        /* INPUT FIELDS */
+        .input-field {
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid #334155;
+            transition: all 0.3s;
+        }
+
+        .input-field:focus {
+            background: rgba(15, 23, 42, 0.9);
+            border-color: #7c3aed;
+            box-shadow: 0 0 0 4px rgba(124, 58, 237, 0.1);
+            outline: none;
+        }
+    </style>
+</head>
+
+<body class="flex flex-col min-h-screen">
+
+    <div id="mobileMenu"
+        class="fixed inset-y-0 left-0 w-72 bg-[#0f172a] z-50 transform -translate-x-full border-r border-gray-800 shadow-2xl flex flex-col glass menu-closed lg:hidden">
+        <div class="p-6 border-b border-gray-800 flex justify-between items-center">
+            <h2 class="text-xl font-bold text-white flex items-center gap-2"><i class="fas fa-cog text-primary"></i>
+                Settings</h2>
+            <button onclick="toggleMobileMenu()" class="text-gray-400 hover:text-white"><i
+                    class="fas fa-times text-xl"></i></button>
+        </div>
+        <div class="p-6 bg-gray-900/50 flex items-center gap-3">
+            <img id="mobileAvatar" class="w-10 h-10 rounded-full border border-gray-700" src="">
+            <div>
+                <h3 id="mobileUsername" class="font-bold text-white text-sm">...</h3>
+                <p id="mobilePlan" class="text-[10px] text-green-400 uppercase tracking-widest">...</p>
+            </div>
+        </div>
+        <nav class="flex-grow p-4 space-y-2">
+            <a href="index.html"
+                class="flex items-center gap-3 px-4 py-3 text-gray-400 hover:bg-gray-800 rounded-xl transition"><i
+                    class="fas fa-th-large"></i> Dashboard</a>
+            <a href="editor.html"
+                class="flex items-center gap-3 px-4 py-3 text-gray-400 hover:bg-gray-800 rounded-xl transition"><i
+                    class="fas fa-code"></i> Code Editor</a>
+            <a href="billing.html"
+                class="flex items-center gap-3 px-4 py-3 text-gray-400 hover:bg-gray-800 rounded-xl transition"><i
+                    class="fas fa-credit-card"></i> Billing</a>
+            <a href="#"
+                class="flex items-center gap-3 px-4 py-3 bg-primary/10 text-primary rounded-xl border border-primary/20 font-bold"><i
+                    class="fas fa-cog"></i> Settings</a>
+        </nav>
+        <div class="p-4 border-t border-gray-800">
+            <button onclick="logout()"
+                class="w-full py-3 bg-red-600/10 text-red-500 rounded-xl font-bold flex justify-center items-center gap-2 hover:bg-red-600 hover:text-white transition"><i
+                    class="fas fa-sign-out-alt"></i> Logout</button>
+        </div>
+    </div>
+
+
+    <nav class="sticky top-0 z-30 w-full glass border-b border-gray-800/50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <div class="flex items-center gap-4">
+                    <button onclick="toggleMobileMenu()" class="lg:hidden p-2 text-gray-400 hover:text-white"><i
+                            class="fas fa-bars text-2xl"></i></button>
+                    <a href="index.html" class="flex items-center gap-3 group">
+                        <div
+                            class="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+                            <i class="fas fa-cloud text-white"></i>
+                        </div>
+                        <div>
+                            <h1 class="text-xl font-bold tracking-tight text-white">Shamim <span
+                                    class="text-primary">Cloud</span></h1>
+                            <p class="text-[10px] text-gray-500 font-mono tracking-widest uppercase">Settings Console
+                            </p>
+                        </div>
+                    </a>
+                </div>
+                <div class="hidden lg:flex items-center space-x-1">
+                    <a href="index.html"
+                        class="px-4 py-2 text-sm font-medium text-gray-400 hover:text-white rounded-lg transition"><i
+                            class="fas fa-arrow-left mr-2"></i>Dashboard</a>
+                </div>
+                <div class="flex items-center gap-3">
+                    <div class="hidden sm:block text-right">
+                        <p id="navUsername" class="text-xs font-bold text-white">Loading...</p>
+                        <p id="navPlan" class="text-[10px] text-green-400 uppercase">Checking...</p>
+                    </div>
+                    <img id="navAvatar" src="" class="w-9 h-9 rounded-full border border-gray-600">
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="flex-grow max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 w-full animate__animated animate__fadeIn">
+
+        <div class="mb-10 text-center md:text-left">
+            <h2 class="text-3xl font-bold text-white mb-2">Account Settings</h2>
+            <p class="text-gray-400 text-sm">Manage your profile, update security, and configure preferences.</p>
+        </div>
+
+        <div
+            class="glass-card rounded-2xl p-6 md:p-8 mb-8 flex flex-col md:flex-row items-center gap-6 md:gap-8 relative overflow-hidden">
+            <div class="absolute top-0 right-0 p-3 opacity-10"><i class="fas fa-id-card text-9xl text-white"></i></div>
+
+            <div class="relative">
+                <div class="w-24 h-24 rounded-full p-1 bg-gradient-to-tr from-primary to-secondary">
+                    <img id="profileAvatar" class="w-full h-full rounded-full border-4 border-[#0f172a]" src="">
+                </div>
+                <div class="absolute bottom-0 right-0 w-6 h-6 bg-green-500 rounded-full border-4 border-[#0f172a]">
+                </div>
+            </div>
+
+            <div class="text-center md:text-left z-10">
+                <h3 id="profileName" class="text-2xl font-bold text-white mb-1">...</h3>
+                <div class="flex flex-wrap justify-center md:justify-start gap-2 mb-3">
+                    <span id="profilePlan"
+                        class="bg-primary/20 text-primary border border-primary/30 text-xs px-2 py-1 rounded font-bold uppercase tracking-wide">...</span>
+                    <span
+                        class="bg-gray-800 text-gray-400 border border-gray-700 text-xs px-2 py-1 rounded font-mono">ID:
+                        <span id="userId">...</span></span>
+                </div>
+                <p class="text-gray-500 text-sm max-w-md">Your username is your unique identity on Shamim Cloud and
+                    defines your website URL structure. It cannot be changed.</p>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+
+            <div class="glass-card rounded-2xl p-6 md:p-8 relative group">
+                <div class="flex items-center gap-3 mb-6">
+                    <div
+                        class="w-10 h-10 rounded-lg bg-blue-500/20 flex items-center justify-center text-blue-400 group-hover:scale-110 transition">
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white">Update Email</h3>
+                </div>
+
+                <form id="emailForm" class="space-y-5">
+                    <div>
+                        <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2 ml-1">New
+                            Email Address</label>
+                        <input type="email" id="newEmail"
+                            class="input-field w-full rounded-xl p-3 text-white placeholder-gray-600"
+                            placeholder="name@example.com" required>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2 ml-1">Confirm
+                            Password</label>
+                        <input type="password" id="emailPass"
+                            class="input-field w-full rounded-xl p-3 text-white placeholder-gray-600"
+                            placeholder="••••••••" required>
+                    </div>
+                    <div class="pt-2">
+                        <button type="submit"
+                            class="w-full py-3 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white font-bold rounded-xl shadow-lg shadow-blue-500/20 transition transform active:scale-95">
+                            Save Email Address
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="glass-card rounded-2xl p-6 md:p-8 relative group">
+                <div class="flex items-center gap-3 mb-6">
+                    <div
+                        class="w-10 h-10 rounded-lg bg-pink-500/20 flex items-center justify-center text-pink-400 group-hover:scale-110 transition">
+                        <i class="fas fa-lock"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white">Security</h3>
+                </div>
+
+                <form id="passForm" class="space-y-5">
+                    <div>
+                        <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2 ml-1">Current
+                            Password</label>
+                        <input type="password" id="oldPass"
+                            class="input-field w-full rounded-xl p-3 text-white placeholder-gray-600"
+                            placeholder="••••••••" required>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2 ml-1">New
+                            Password</label>
+                        <input type="password" id="newPass"
+                            class="input-field w-full rounded-xl p-3 text-white placeholder-gray-600"
+                            placeholder="••••••••" required>
+                    </div>
+                    <div class="pt-2">
+                        <button type="submit"
+                            class="w-full py-3 bg-gradient-to-r from-secondary to-pink-500 hover:from-pink-500 hover:to-pink-400 text-white font-bold rounded-xl shadow-lg shadow-pink-500/20 transition transform active:scale-95">
+                            Update Password
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div
+            class="mt-8 border border-red-900/50 bg-red-900/10 rounded-2xl p-6 flex flex-col md:flex-row justify-between items-center gap-4">
+            <div>
+                <h4 class="text-red-400 font-bold flex items-center gap-2"><i class="fas fa-exclamation-triangle"></i>
+                    Danger Zone</h4>
+                <p class="text-xs text-gray-500 mt-1">Once you delete your account, there is no going back. Please be
+                    certain.</p>
+            </div>
+            <button onclick="openDeleteModal()"
+                class="px-6 py-2 bg-red-600/10 hover:bg-red-600 text-red-500 hover:text-white border border-red-600/50 rounded-lg font-bold text-sm transition">
+                Delete Account
+            </button>
+        </div>
+
+    </main>
+
+    <div id="menuOverlay" onclick="toggleMobileMenu()" </div>
+
+        <!-- DELETE ACCOUNT MODAL -->
+        <div id="deleteModal"
+            class="fixed inset-0 z-50 hidden flex items-center justify-center bg-black/90 backdrop-blur-sm p-4 animate__animated animate__fadeIn">
+            <div
+                class="relative w-full max-w-md bg-red-950/30 rounded-2xl p-6 shadow-2xl border border-red-900/50 animate__animated animate__shakeX">
+
+                <div class="text-center mb-6">
+                    <div
+                        class="w-16 h-16 bg-red-500/10 rounded-full flex items-center justify-center mx-auto mb-4 border border-red-500/20">
+                        <i class="fas fa-exclamation-triangle text-3xl text-red-500"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-white mb-2">Delete Account Forever?</h3>
+                    <p class="text-gray-400 text-sm">
+                        Warning: This action is <b>irreversible</b>. <br>
+                        All your projects, websites, and data will be permanently wiped.
+                    </p>
+                </div>
+
+                <form id="deleteForm" class="space-y-4" onsubmit="confirmDeleteAccount(event)">
+                    <div>
+                        <label class="block text-xs font-bold text-red-400 uppercase tracking-widest mb-2 ml-1">Confirm
+                            Password</label>
+                        <input type="password" id="deletePass"
+                            class="input-field w-full rounded-xl p-3 text-white placeholder-red-300/30 border-red-900/50 focus:border-red-500 focus:ring-red-500/20"
+                            placeholder="Enter your password to confirm" required>
+                    </div>
+
+                    <div class="flex gap-3 pt-2">
+                        <button type="button" onclick="document.getElementById('deleteModal').classList.add('hidden')"
+                            class="flex-1 py-3 bg-gray-800 hover:bg-gray-700 text-white font-bold rounded-xl transition">
+                            Cancel
+                        </button>
+                        <button type="submit"
+                            class="flex-1 py-3 bg-red-600 hover:bg-red-500 text-white font-bold rounded-xl shadow-lg shadow-red-600/20 transition">
+                            Delete Forever
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <script src="js/ui-utils.js"></script>
+        <script>
+            const user = JSON.parse(localStorage.getItem('shamim_user'));
+            if (!user) window.location.href = 'login.html';
+
+            // --- POPULATE UI ---
+            const avatarUrl = `https://ui-avatars.com/api/?name=${user.username}&background=7c3aed&color=fff&bold=true`;
+
+            // Navbar & Sidebar
+            document.querySelectorAll('#navUsername, #mobileUsername').forEach(el => el.textContent = user.username);
+            document.querySelectorAll('#navPlan, #mobilePlan, #profilePlan').forEach(el => el.textContent = user.plan + " PLAN");
+            document.querySelectorAll('#navAvatar, #mobileAvatar, #profileAvatar').forEach(el => el.src = avatarUrl);
+
+            // Profile Card
+            document.getElementById('profileName').textContent = user.username;
+            document.getElementById('userId').textContent = user.id || 'Unknown';
+            document.getElementById('newEmail').value = user.email; // Pre-fill email
+
+            // --- MENU TOGGLE ---
+            function toggleMobileMenu() {
+                const menu = document.getElementById('mobileMenu');
+                const overlay = document.getElementById('menuOverlay');
+                if (menu.classList.contains('menu-closed')) {
+                    menu.classList.remove('menu-closed');
+                    menu.classList.add('menu-open');
+                    overlay.classList.remove('hidden');
+                } else {
+                    menu.classList.add('menu-closed');
+                    menu.classList.remove('menu-open');
+                    overlay.classList.add('hidden');
+                }
+            }
+
+            async function logout() {
+                if (await openConfirm('Log Out', 'Log out of Shamim Cloud?')) {
+                    localStorage.removeItem('shamim_user');
+                    window.location.href = 'login.html';
+                }
+            }
+
+            // --- API HANDLERS ---
+            async function handleUpdate(endpoint, body, btn) {
+                const originalText = btn.innerHTML;
+                btn.disabled = true;
+                btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Processing...';
+
+                try {
+                    const res = await fetch(endpoint, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(body)
+                    });
+                    const data = await res.json();
+
+                    showToast(data.message, data.success ? 'success' : 'error');
+
+                    if (data.success) {
+                        // If email changed, update local storage
+                        if (body.newEmail) {
+                            user.email = body.newEmail;
+                            localStorage.setItem('shamim_user', JSON.stringify(user));
+                        }
+                        // Reset forms
+                        document.getElementById('emailPass').value = '';
+                        document.getElementById('oldPass').value = '';
+                        document.getElementById('newPass').value = '';
+                    }
+                } catch (err) {
+                    showToast('Server connection failed', 'error');
+                }
+
+                btn.disabled = false;
+                btn.innerHTML = originalText;
+            }
+
+            // Email Form Submit
+            document.getElementById('emailForm').addEventListener('submit', e => {
+                e.preventDefault();
+                const body = {
+                    username: user.username,
+                    password: document.getElementById('emailPass').value,
+                    newEmail: document.getElementById('newEmail').value
+                };
+                handleUpdate('/api/change-email', body, e.target.querySelector('button'));
+            });
+
+            // Password Form Submit
+            document.getElementById('passForm').addEventListener('submit', e => {
+                e.preventDefault();
+                if (document.getElementById('newPass').value.length < 6) {
+                    showToast('Password must be at least 6 chars', 'error');
+                    return;
+                }
+                const body = {
+                    username: user.username,
+                    oldPassword: document.getElementById('oldPass').value,
+                    newPassword: document.getElementById('newPass').value
+                };
+                handleUpdate('/api/change-password', body, e.target.querySelector('button'));
+            });
+
+            // --- DELETE ACCOUNT LOGIC ---
+            function openDeleteModal() {
+                document.getElementById('deleteModal').classList.remove('hidden');
+                document.getElementById('deletePass').value = '';
+                document.getElementById('deletePass').focus();
+            }
+
+            async function confirmDeleteAccount(e) {
+                e.preventDefault();
+                const password = document.getElementById('deletePass').value;
+                const btn = e.target.querySelector('button[type="submit"]');
+
+                if (!password) return;
+
+                const originalText = btn.innerHTML;
+                btn.disabled = true;
+                btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Deleting...';
+
+                try {
+                    const res = await fetch('/api/delete-account', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ username: user.username, password: password })
+                    });
+                    const data = await res.json();
+
+                    if (data.success) {
+                        localStorage.removeItem('shamim_user');
+                        alert('Your account has been deleted. Goodbye.');
+                        window.location.href = 'index.html';
+                    } else {
+                        showToast(data.message || 'Deletion failed', 'error');
+                    }
+                } catch (err) {
+                    showToast('Server Error', 'error');
+                }
+
+                btn.disabled = false;
+                btn.innerHTML = originalText;
+            }
+
+
+        </script>
+</body>
+
+</html>

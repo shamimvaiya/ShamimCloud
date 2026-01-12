@@ -1,0 +1,994 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Console | Shamim Cloud Enterprise</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        dark: '#030712',
+                        card: '#1e293b',
+                        primary: '#7c3aed',
+                        secondary: '#db2777'
+                    },
+                    fontFamily: {
+                        sans: ['Outfit', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
+
+        body {
+            background-color: #030712;
+            background-image:
+                radial-gradient(at 0% 0%, rgba(124, 58, 237, 0.15) 0px, transparent 50%),
+                radial-gradient(at 100% 0%, rgba(219, 39, 119, 0.15) 0px, transparent 50%);
+            color: #e2e8f0;
+            font-family: 'Outfit', sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* GLASSMORPHISM */
+        .glass {
+            background: rgba(30, 41, 59, 0.4);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .glass-hover:hover {
+            background: rgba(30, 41, 59, 0.6);
+            border-color: rgba(124, 58, 237, 0.5);
+            box-shadow: 0 0 20px rgba(124, 58, 237, 0.2);
+        }
+
+        /* CUSTOM SCROLLBAR */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #7c3aed;
+        }
+
+        /* MOBILE MENU TRANSITION */
+        #mobileMenu {
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .menu-open {
+            transform: translateX(0) !important;
+        }
+
+        .menu-closed {
+            transform: translateX(-100%) !important;
+        }
+
+        /* LOADER */
+        .loader {
+            border: 3px solid rgba(255, 255, 255, 0.1);
+            border-left-color: #7c3aed;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes shine-alt {
+            from {
+                transform: translateX(-100%) skewX(-15deg);
+            }
+
+            to {
+                transform: translateX(200%) skewX(-15deg);
+            }
+        }
+
+        .shine-fast {
+            animation: shine-alt 2s infinite linear;
+        }
+    </style>
+</head>
+
+<body class="flex flex-col min-h-screen">
+
+    <div id="mobileMenu"
+        class="fixed inset-y-0 left-0 w-72 bg-[#0f172a] z-50 transform -translate-x-full border-r border-gray-800 shadow-2xl flex flex-col glass menu-closed lg:hidden">
+
+        <div class="p-6 border-b border-gray-800 flex justify-between items-center">
+            <h2 class="text-xl font-bold text-white flex items-center gap-2">
+                <i class="fas fa-cloud text-primary"></i> Menu
+            </h2>
+            <button onclick="toggleMobileMenu()" class="text-gray-400 hover:text-white transition">
+                <i class="fas fa-times text-xl"></i>
+            </button>
+        </div>
+
+        <div class="p-6 bg-gray-900/50">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-primary to-secondary p-[2px]">
+                    <img id="mobileAvatar" class="w-full h-full rounded-full border-2 border-[#0f172a]" src="">
+                </div>
+                <div>
+                    <h3 id="mobileUsername" class="font-bold text-white text-sm">User</h3>
+                    <p id="mobilePlan" class="text-xs text-green-400 font-mono uppercase">Plan</p>
+                </div>
+            </div>
+        </div>
+
+        <nav class="flex-grow p-4 space-y-2 overflow-y-auto">
+            <a href="#"
+                class="flex items-center gap-3 px-4 py-3 bg-primary/10 text-primary rounded-xl border border-primary/20 font-bold">
+                <i class="fas fa-th-large"></i> Dashboard
+            </a>
+            <a href="editor.html"
+                class="flex items-center gap-3 px-4 py-3 text-gray-400 hover:bg-gray-800 hover:text-white rounded-xl transition">
+                <i class="fas fa-code"></i> Code Editor
+            </a>
+            <a href="billing.html"
+                class="flex items-center gap-3 px-4 py-3 text-gray-400 hover:bg-gray-800 hover:text-white rounded-xl transition">
+                <i class="fas fa-credit-card"></i> Billing & Plans
+            </a>
+            <a href="settings.html"
+                class="flex items-center gap-3 px-4 py-3 text-gray-400 hover:bg-gray-800 hover:text-white rounded-xl transition">
+                <i class="fas fa-cog"></i> Settings
+            </a>
+            <div id="mobileAdminLink" class="hidden">
+                <div class="my-2 border-t border-gray-800"></div>
+                <a href="admin.html"
+                    class="flex items-center gap-3 px-4 py-3 text-red-400 hover:bg-red-500/10 rounded-xl transition">
+                    <i class="fas fa-shield-alt"></i> Admin Panel
+                </a>
+            </div>
+        </nav>
+
+        <div class="p-4 border-t border-gray-800">
+            <button onclick="logout()"
+                class="w-full py-3 bg-red-600/10 hover:bg-red-600 text-red-500 hover:text-white rounded-xl font-bold transition flex justify-center items-center gap-2">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </button>
+        </div>
+    </div>
+
+    <!-- Confirm Modal Container & Toast Container will be injected by ui-utils.js -->
+
+    <div id="menuOverlay" onclick="toggleMobileMenu()"
+        class="fixed inset-0 bg-black/80 z-40 hidden backdrop-blur-sm lg:hidden animate__animated animate__fadeIn">
+    </div>
+
+
+    <nav class="sticky top-0 z-30 w-full glass border-b border-gray-800/50">
+        <div class="max-w-8xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+
+                <div class="flex items-center gap-4">
+                    <button onclick="toggleMobileMenu()"
+                        class="lg:hidden p-2 text-gray-400 hover:text-white transition">
+                        <i class="fas fa-bars text-2xl"></i>
+                    </button>
+
+                    <a href="#" class="flex items-center gap-3 group">
+                        <div
+                            class="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center shadow-lg shadow-primary/20 group-hover:scale-110 transition-transform duration-300">
+                            <i class="fas fa-cloud text-white"></i>
+                        </div>
+                        <div>
+                            <h1 class="text-xl font-bold tracking-tight text-white">Shamim <span
+                                    class="text-primary">Cloud</span></h1>
+                            <div class="flex items-center gap-2">
+                                <span
+                                    class="text-[10px] text-gray-500 font-mono tracking-widest uppercase">Enterprise</span>
+                                <span class="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="hidden lg:flex items-center space-x-1">
+                    <a href="editor.html"
+                        class="px-4 py-2 text-sm font-medium text-gray-300 hover:text-white hover:bg-white/5 rounded-lg transition"><i
+                            class="fas fa-code mr-2 text-primary"></i>Editor</a>
+                    <a href="billing.html"
+                        class="px-4 py-2 text-sm font-medium text-gray-300 hover:text-white hover:bg-white/5 rounded-lg transition"><i
+                            class="fas fa-gem mr-2 text-secondary"></i>Pricing</a>
+                    <a href="settings.html"
+                        class="px-4 py-2 text-sm font-medium text-gray-300 hover:text-white hover:bg-white/5 rounded-lg transition"><i
+                            class="fas fa-cog mr-2"></i>Settings</a>
+                </div>
+
+                <div class="hidden lg:flex items-center gap-4">
+                    <div class="h-8 w-px bg-gray-700"></div>
+
+                    <div class="relative">
+                        <button id="profileMenuBtn" onclick="toggleProfileMenu(event)"
+                            class="flex items-center gap-3 bg-gray-900/50 hover:bg-gray-800 pl-2 pr-4 py-1.5 rounded-full border border-gray-700 hover:border-primary/50 transition-all duration-300">
+                            <img id="navAvatar" src="" class="w-8 h-8 rounded-full border border-gray-600">
+                            <div class="text-left">
+                                <p id="navUsername" class="text-xs font-bold text-white leading-none">...</p>
+                                <p id="navPlan" class="text-[9px] text-green-400 uppercase font-mono mt-0.5">...</p>
+                            </div>
+                            <i id="profileChevron"
+                                class="fas fa-chevron-down text-xs text-gray-500 ml-1 transition-transform duration-300"></i>
+                        </button>
+
+                        <div id="profileMenu"
+                            class="absolute right-0 mt-4 w-64 glass bg-[#0f172a] rounded-xl shadow-2xl py-2 hidden animate__animated animate__fadeIn border border-gray-700 transform origin-top-right z-50">
+
+                            <!-- Mini Plan Card (Injected via JS) -->
+                            <div id="miniPlanCardContainer" class="px-4 pt-2 pb-1"></div>
+
+                            <div class="px-4 py-3 border-b border-gray-700 mb-2 bg-gray-800/30">
+                                <p class="text-xs text-gray-400">Signed in as</p>
+                                <p id="navEmail" class="text-sm font-bold text-white truncate">...</p>
+                            </div>
+                            <a href="admin.html" id="deskAdminLink"
+                                class="hidden px-4 py-2 text-sm text-red-400 hover:bg-red-500/10 transition flex items-center gap-2"><i
+                                    class="fas fa-shield-alt"></i> Admin Panel</a>
+
+                            <!-- Billing History Removed as requested -->
+                            <a href="settings.html"
+                                class="block px-4 py-2 text-sm text-gray-300 hover:bg-white/5 transition"><i
+                                    class="fas fa-cog mr-2 text-gray-500"></i> Account Settings</a>
+
+                            <div class="border-t border-gray-700 my-1"></div>
+                            <button onclick="logout()"
+                                class="w-full text-left px-4 py-2 text-sm text-red-400 hover:bg-red-500/10 transition"><i
+                                    class="fas fa-sign-out-alt mr-2"></i> Sign out</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+
+    <main class="flex-grow max-w-8xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+
+        <div
+            class="flex flex-col md:flex-row justify-between items-start md:items-end mb-10 gap-6 animate__animated animate__fadeInDown">
+            <div>
+                <div class="flex items-center gap-2 mb-2">
+                    <span
+                        class="px-2 py-0.5 rounded text-[10px] font-bold bg-green-500/10 text-green-400 border border-green-500/20">SYSTEM
+                        OPERATIONAL</span>
+                    <span
+                        class="px-2 py-0.5 rounded text-[10px] font-bold bg-blue-500/10 text-blue-400 border border-blue-500/20">V2.1
+                        STABLE</span>
+                </div>
+                <h2 class="text-3xl md:text-4xl font-extrabold text-white">
+                    Welcome back, <span id="welcomeName"
+                        class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">User</span> 👋
+                </h2>
+                <p class="text-gray-400 mt-2 max-w-xl">Manage your deployments, monitor performance, and scale your
+                    applications with the power of Cloud Infrastructure.</p>
+            </div>
+
+            <div class="flex gap-3 w-full md:w-auto">
+                <button onclick="loadProjects()"
+                    class="p-3 bg-gray-800 hover:bg-gray-700 text-white rounded-xl border border-gray-700 transition tooltip"
+                    title="Refresh Data">
+                    <i class="fas fa-sync-alt spin-hover"></i>
+                </button>
+                <button id="createProjectBtn" onclick="checkLimitAndOpenModal()"
+                    class="flex-1 md:flex-none px-6 py-3 bg-gradient-to-r from-primary to-secondary hover:opacity-90 text-white font-bold rounded-xl shadow-lg shadow-primary/25 transition transform hover:-translate-y-1 flex items-center justify-center gap-2">
+                    <i class="fas fa-plus-circle"></i> <span class="hidden sm:inline">New Project</span><span
+                        class="sm:hidden">Create</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-10 animate__animated animate__fadeIn">
+
+            <div class="glass p-5 rounded-2xl border-l-4 border-primary relative overflow-hidden group">
+                <div class="absolute right-0 top-0 p-4 opacity-5 group-hover:scale-110 transition-transform"><i
+                        class="fas fa-cubes text-6xl text-white"></i></div>
+                <h3 class="text-gray-400 text-xs font-bold uppercase tracking-wider">Total Deployments</h3>
+                <p id="totalProjects" class="text-3xl font-bold text-white mt-1">...</p>
+                <p class="text-[10px] text-green-400 mt-2"><i class="fas fa-arrow-up"></i> Updated just now</p>
+            </div>
+
+            <div class="glass p-5 rounded-2xl border-l-4 border-secondary relative overflow-hidden group">
+                <div class="absolute right-0 top-0 p-4 opacity-5 group-hover:scale-110 transition-transform"><i
+                        class="fas fa-hdd text-6xl text-white"></i></div>
+                <h3 class="text-gray-400 text-xs font-bold uppercase tracking-wider">Storage Usage</h3>
+                <div id="storageContent">
+                    <p class="text-3xl font-bold text-white mt-1"><span id="storageUsed">0</span> <span
+                            class="text-sm font-normal text-gray-500">/ <span id="storageLimit">200 MB</span></span></p>
+                    <div class="w-full bg-gray-700 h-1 mt-3 rounded-full overflow-hidden">
+                        <div id="storageBar" class="bg-secondary h-1 w-[0%] transition-all duration-1000"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="glass p-5 rounded-2xl border-l-4 border-blue-500 relative overflow-hidden group">
+                <div class="absolute right-0 top-0 p-4 opacity-5 group-hover:scale-110 transition-transform"><i
+                        class="fas fa-clock text-6xl text-white"></i></div>
+                <h3 class="text-gray-400 text-xs font-bold uppercase tracking-wider">Subscription Status</h3>
+                <p id="daysRemaining" class="text-3xl font-bold text-white mt-1">...</p>
+                <p id="renewalDate" class="text-[10px] text-blue-400 mt-2">Checking...</p>
+            </div>
+
+            <div class="glass p-5 rounded-2xl border-l-4 border-green-500 relative overflow-hidden group">
+                <div class="absolute right-0 top-0 p-4 opacity-5 group-hover:scale-110 transition-transform"><i
+                        class="fas fa-bolt text-6xl text-white"></i></div>
+                <h3 class="text-gray-400 text-xs font-bold uppercase tracking-wider">System Health</h3>
+                <p class="text-3xl font-bold text-green-400 mt-1">99.9%</p>
+                <p class="text-[10px] text-gray-500 mt-2">No incidents reported</p>
+            </div>
+        </div>
+
+        <div
+            class="flex flex-col sm:flex-row justify-between items-center mb-6 gap-4 bg-gray-900/30 p-2 rounded-xl border border-gray-800">
+            <div class="flex items-center gap-2 w-full sm:w-auto overflow-x-auto pb-2 sm:pb-0 hide-scroll">
+                <button onclick="setFilter('all', this)"
+                    class="px-4 py-2 text-xs font-bold text-white bg-gray-800 rounded-lg hover:bg-gray-700 whitespace-nowrap transition filter-btn ring-1 ring-gray-700">All
+                    Projects</button>
+                <button onclick="setFilter('active', this)"
+                    class="px-4 py-2 text-xs font-bold text-gray-400 hover:text-white hover:bg-gray-800 rounded-lg whitespace-nowrap transition filter-btn">Active</button>
+                <button onclick="setFilter('archived', this)"
+                    class="px-4 py-2 text-xs font-bold text-gray-400 hover:text-white hover:bg-gray-800 rounded-lg whitespace-nowrap transition filter-btn">Archived</button>
+            </div>
+
+            <div class="relative w-full sm:w-64">
+                <i class="fas fa-search absolute left-3 top-2.5 text-gray-500 text-xs"></i>
+                <input type="text" placeholder="Search projects..."
+                    class="w-full bg-gray-800 text-white text-sm rounded-lg pl-9 pr-4 py-2 border border-gray-700 focus:border-primary outline-none transition">
+            </div>
+        </div>
+
+        <div id="loadingState" class="hidden py-32 text-center">
+            <div class="inline-block loader mb-4"></div>
+            <p class="text-gray-400 text-sm animate-pulse">Synchronizing with Secure Vault...</p>
+        </div>
+
+        <div id="projectsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pb-20">
+        </div>
+
+        <div id="emptyState"
+            class="hidden flex flex-col items-center justify-center py-24 glass rounded-3xl border border-dashed border-gray-700 text-center mx-4">
+            <div class="w-24 h-24 bg-gray-800/50 rounded-full flex items-center justify-center mb-6 relative">
+                <i class="fas fa-box-open text-4xl text-gray-600"></i>
+                <div
+                    class="absolute -top-2 -right-2 w-8 h-8 bg-primary rounded-full flex items-center justify-center animate-bounce">
+                    <i class="fas fa-plus text-white text-xs"></i>
+                </div>
+            </div>
+            <h3 class="text-2xl font-bold text-white mb-2">It's quiet here...</h3>
+            <p class="text-gray-500 mb-8 max-w-sm">You haven't deployed any projects yet. Upload your first HTML/CSS
+                project to get started.</p>
+            <button onclick="openModal()"
+                class="px-8 py-3 bg-white text-dark font-bold rounded-xl hover:bg-gray-200 transition">
+                Create First Project
+            </button>
+        </div>
+
+    </main>
+
+    <footer class="border-t border-gray-800 bg-[#020617] py-10 mt-auto">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <div class="flex justify-center items-center gap-2 mb-4">
+                <i class="fas fa-cloud text-primary"></i>
+                <span class="font-bold text-lg text-white">Shamim Cloud</span>
+            </div>
+            <p class="text-gray-600 text-sm">
+                &copy; 2026 Shamim Cloud Enterprise. <br class="sm:hidden">
+                Powered by <a href="#" class="text-primary hover:underline">Devil-X Engine</a> & Cloud Nodes.
+            </p>
+        </div>
+    </footer>
+
+
+    <div id="deployModal"
+        class="fixed inset-0 z-[60] hidden flex items-center justify-center bg-black/80 backdrop-blur-sm p-4"
+        onclick="if(event.target === this) closeModal()">
+
+        <div
+            class="relative w-full max-w-md bg-[#0f172a] rounded-2xl p-6 shadow-2xl border border-gray-800 animate__animated animate__zoomIn">
+
+            <div class="flex justify-between items-center mb-6 border-b border-gray-700 pb-4">
+                <div>
+                    <h3 class="text-2xl font-bold text-white">Deploy Site</h3>
+                    <p class="text-xs text-gray-400 mt-1">Upload your static files (HTML/CSS/JS)</p>
+                </div>
+                <button onclick="closeModal()"
+                    class="w-8 h-8 rounded-full bg-gray-800 hover:bg-red-500/20 hover:text-red-500 flex items-center justify-center transition">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <form id="deployForm" class="space-y-5">
+                <div>
+                    <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Project
+                        Name</label>
+                    <div class="relative">
+                        <i class="fas fa-folder absolute left-4 top-3.5 text-gray-500"></i>
+                        <input type="text" id="projectName"
+                            class="w-full bg-gray-900 border border-gray-700 rounded-xl p-3 pl-10 text-white focus:border-primary outline-none transition"
+                            placeholder="my-website" required pattern="[a-zA-Z0-9-_]+">
+                    </div>
+                    <p class="text-[10px] text-gray-500 mt-1 ml-1">No spaces allowed. Use hyphens (-).</p>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Upload
+                        Files</label>
+                    <div id="dropZone"
+                        class="border-2 border-dashed border-gray-600 hover:border-primary hover:bg-primary/5 rounded-xl p-8 text-center cursor-pointer relative group transition-all">
+                        <input type="file" id="fileInput"
+                            class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" multiple required>
+
+                        <div class="transition-transform group-hover:scale-110 duration-300">
+                            <i class="fas fa-cloud-upload-alt text-4xl text-gray-500 mb-3 group-hover:text-primary"></i>
+                        </div>
+                        <p class="text-gray-300 font-medium text-sm">Tap to browse files</p>
+                        <p class="text-xs text-gray-500 mt-1" id="fileCount">Must include index.html</p>
+                    </div>
+                </div>
+
+                <div class="pt-2">
+                    <button type="submit" id="deployBtn"
+                        class="w-full py-4 bg-gradient-to-r from-primary to-secondary text-white font-bold rounded-xl shadow-lg hover:shadow-primary/30 transition transform active:scale-95 flex justify-center items-center gap-2">
+                        <span>Launch Project</span>
+                        <i class="fas fa-rocket"></i>
+                    </button>
+                </div>
+
+                <div id="progressBarContainer" class="hidden">
+                    <div class="flex justify-between text-[10px] text-gray-400 mb-1 uppercase font-bold">
+                        <span id="progressText">Uploading to GitHub...</span>
+                        <span id="progressPercent">0%</span>
+                    </div>
+                    <div class="w-full bg-gray-700 rounded-full h-1.5 overflow-hidden">
+                        <div id="progressBar" class="bg-green-500 h-full rounded-full transition-all duration-300"
+                            style="width: 0%"></div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/ui-utils.js"></script>
+    <script>
+        const API_URL = '/api'; // Works for both local and Vercel
+
+        // --- GLOBAL STATE ---
+        let allProjects = [];
+        let currentFilter = 'all';
+
+        // --- AUTH & INITIALIZATION ---
+        const userSession = localStorage.getItem('shamim_user');
+        if (!userSession) window.location.href = 'login.html';
+        const user = JSON.parse(userSession);
+
+        // Populate User Data
+        const avatars = document.querySelectorAll('#navAvatar, #mobileAvatar');
+        const usernames = document.querySelectorAll('#navUsername, #mobileUsername, #welcomeName');
+        const plans = document.querySelectorAll('#navPlan, #mobilePlan');
+
+        avatars.forEach(img => img.src = `https://ui-avatars.com/api/?name=${user.username}&background=7c3aed&color=fff&bold=true`);
+        usernames.forEach(el => el.textContent = user.username);
+        plans.forEach(el => el.textContent = user.plan + ' Plan');
+        document.getElementById('navEmail').textContent = user.email;
+
+        // Admin Link Visibility
+        if (user.role === 'admin') {
+            document.getElementById('deskAdminLink').classList.remove('hidden');
+            document.getElementById('mobileAdminLink').classList.remove('hidden');
+        }
+
+        // --- PROFILE MENU LOGIC & MINI CARD ---
+        function toggleProfileMenu(e) {
+            e.stopPropagation();
+            const menu = document.getElementById('profileMenu');
+            const chevron = document.getElementById('profileChevron');
+
+            menu.classList.toggle('hidden');
+            if (!menu.classList.contains('hidden')) {
+                chevron.classList.add('rotate-180');
+            } else {
+                chevron.classList.remove('rotate-180');
+            }
+        }
+
+        // Close on Click Outside
+        window.addEventListener('click', (e) => {
+            const menu = document.getElementById('profileMenu');
+            const btn = document.getElementById('profileMenuBtn');
+            const chevron = document.getElementById('profileChevron');
+
+            if (menu && !menu.classList.contains('hidden') && !menu.contains(e.target) && !btn.contains(e.target)) {
+                menu.classList.add('hidden');
+                chevron.classList.remove('rotate-180');
+            }
+        });
+
+        // Inject Mini Plan Card
+        const miniCardContainer = document.getElementById('miniPlanCardContainer');
+        if (miniCardContainer) {
+            let cardBg = 'bg-gradient-to-r from-gray-800 to-gray-900 border border-gray-700';
+            let planName = 'STARTER';
+
+            if (user.role === 'admin' || user.role === 'superadmin') {
+                miniCardContainer.innerHTML = `
+                <div class="p-3 mb-2 rounded-lg bg-gradient-to-br from-[#d4af37] via-[#f9d423] to-[#b8860b] relative overflow-hidden group shadow-[0_0_15px_rgba(212,175,55,0.4)] border border-yellow-300/50">
+                     <!-- Shine Effect -->
+                    <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent w-1/2 h-full -skew-x-12 shine-fast opacity-50 z-0 pointer-events-none"></div>
+                    
+                    <div class="absolute top-0 right-0 p-2 opacity-20">
+                        <i class="fas fa-crown text-4xl text-black"></i>
+                    </div>
+                    <p class="text-[10px] text-black/70 uppercase font-black tracking-wider mb-1 z-10 relative">System Owner</p>
+                    <div class="flex justify-between items-center relative z-10">
+                        <span class="font-extrabold text-sm tracking-wide text-black drop-shadow-sm">SUPER ADMIN</span>
+                        <span class="text-[10px] bg-black text-[#f9d423] px-2 py-0.5 rounded flex items-center gap-1 font-bold shadow-sm">
+                            <i class="fas fa-infinity text-[8px]"></i> LIFETIME
+                        </span>
+                    </div>
+                </div>
+            `;
+            } else {
+                if (user.plan === 'pro') {
+                    cardBg = 'bg-gradient-to-r from-indigo-600 to-violet-600 shadow-lg shadow-indigo-500/20';
+                    planName = 'PRO PLAN';
+                } else if (user.plan === 'vip') {
+                    cardBg = 'bg-gradient-to-r from-yellow-600 to-amber-600 shadow-lg shadow-yellow-500/20';
+                    planName = 'VIP UNLIMITED';
+                }
+
+                miniCardContainer.innerHTML = `
+                    <div class="p-3 mb-2 rounded-lg ${cardBg} text-white relative overflow-hidden group">
+                        <div class="absolute top-0 right-0 p-2 opacity-10">
+                            <i class="fas fa-cube text-4xl"></i>
+                        </div>
+                        <p class="text-[10px] opacity-80 uppercase font-bold tracking-wider mb-1">Current Plan</p>
+                        <div class="flex justify-between items-center relative z-10">
+                            <span class="font-bold text-sm tracking-wide">${planName}</span>
+                            <span class="text-[10px] bg-white/20 backdrop-blur-md px-1.5 py-0.5 rounded flex items-center gap-1">
+                                <span class="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse"></span> Active
+                            </span>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        // --- MOBILE MENU LOGIC ---
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobileMenu');
+            const overlay = document.getElementById('menuOverlay');
+
+            if (menu.classList.contains('menu-closed')) {
+                menu.classList.remove('menu-closed');
+                menu.classList.add('menu-open');
+                overlay.classList.remove('hidden');
+            } else {
+                menu.classList.add('menu-closed');
+                menu.classList.remove('menu-open');
+                overlay.classList.add('hidden');
+            }
+        }
+
+        async function logout() {
+            if (await openConfirm('Log Out', 'Are you sure you want to log out?')) {
+                localStorage.removeItem('shamim_user');
+                window.location.href = 'login.html';
+            }
+        }
+
+        // --- PROJECT MANAGEMENT ---
+
+        /* 1. Fetch Projects (Logic) */
+        async function loadProjects() {
+            const loading = document.getElementById('loadingState');
+            const empty = document.getElementById('emptyState');
+
+            // Show Loading
+            document.getElementById('projectsGrid').innerHTML = '';
+            loading.classList.remove('hidden');
+            empty.classList.add('hidden');
+
+            try {
+                const res = await fetch(`${API_URL}/projects?username=${user.username}`);
+                const data = await res.json();
+                loading.classList.add('hidden');
+
+                if (data.success) {
+                    allProjects = data.projects; // Store globally
+                    document.getElementById('totalProjects').textContent = allProjects.length;
+
+                    // --- DATA SYNC (Load Fresh User Data) ---
+                    try {
+                        const userRes = await fetch('/api/auth/me'); // Or /api/user depending on backend
+                        const userData = await userRes.json();
+                        if (userData.success) {
+                            // Update Local Storage & Global Var
+                            localStorage.setItem('shamim_user', JSON.stringify(userData.user));
+                            user.plan = userData.user.plan;
+                            user.expiryDate = userData.user.expiryDate;
+                        }
+                    } catch (e) { console.error("Sync Failed", e); }
+
+                    // --- STORAGE & LIMITS LOGIC ---
+
+                    // Fetch Plan Limits
+                    let planLimits = { storage: 100, max_projects: 1 };
+                    try {
+                        const pRes = await fetch('/api/get-plans');
+                        const pData = await pRes.json();
+                        if (pData.success && pData.plans[user.plan]) {
+                            planLimits = pData.plans[user.plan];
+                        }
+                    } catch (e) { console.error('Plan fetch fail'); }
+
+                    // Admin Override
+                    if (user.role === 'admin' || user.role === 'superadmin') {
+                        planLimits = { storage: 1024 * 1024, max_projects: -1 }; // Unlimited
+                    }
+
+                    // Store for usage in checkLimit
+                    window.userPlanLimits = planLimits;
+
+                    // Mock Usage: (Projects * 5MB) + Random KB
+                    const randomKB = Math.random() * 0.5; // 0-0.5 MB
+                    const used = (allProjects.length * 5) + randomKB;
+                    const limit = planLimits.storage;
+
+                    const percent = Math.min((used / limit) * 100, 100);
+
+                    if (user.role === 'admin') {
+                        document.getElementById('storageContent').innerHTML = `
+                            <p class="text-3xl font-bold text-white mt-1">Unlimited <span class="text-2xl">♾️</span></p>
+                            <p class="text-[10px] text-gray-500 mt-2">No limits for Admin</p>
+                        `;
+                    } else {
+                        document.getElementById('storageUsed').textContent = used < 1000 ? `${used.toFixed(1)}MB` : `${(used / 1024).toFixed(2)}GB`;
+                        document.getElementById('storageLimit').textContent = limit < 1000 ? `${limit}MB` : `${(limit / 1024).toFixed(1)}GB`;
+                        document.getElementById('storageBar').style.width = `${percent}%`;
+                    }
+
+                    // --- UPDATE CREATE BUTTON (LOCK ICON) ---
+                    const createBtn = document.getElementById('createProjectBtn');
+                    const isLimitReached = planLimits.max_projects !== -1 && allProjects.length >= planLimits.max_projects;
+
+                    if (isLimitReached && user.role !== 'admin') {
+                        createBtn.innerHTML = `<i class="fas fa-lock text-gray-400"></i> <span>Limit Reached</span>`;
+                        createBtn.className = "flex-1 md:flex-none px-6 py-3 bg-gray-700 text-gray-400 font-bold rounded-xl shadow-none cursor-not-allowed flex items-center justify-center gap-2 transition";
+                        // Update click to show specific limit message
+                        createBtn.onclick = () => {
+                            if (window.openConfirm) {
+                                openConfirm('Plan Limit Reached', `You have reached the limit of <b>${planLimits.max_projects}</b> projects for the <b>${user.plan.toUpperCase()}</b> plan.<br><br>Upgrade to get more space and projects!`, 'Upgrade Now').then(yes => { if (yes) window.location.href = 'billing.html'; });
+                            } else { alert("Limit Reached. Please Upgrade."); }
+                        };
+                    } else {
+                        // Reset
+                        createBtn.innerHTML = `<i class="fas fa-plus-circle"></i> <span class="hidden sm:inline">New Project</span><span class="sm:hidden">Create</span>`;
+                        createBtn.className = "flex-1 md:flex-none px-6 py-3 bg-gradient-to-r from-primary to-secondary hover:opacity-90 text-white font-bold rounded-xl shadow-lg shadow-primary/25 transition transform hover:-translate-y-1 flex items-center justify-center gap-2";
+                        createBtn.onclick = checkLimitAndOpenModal;
+                    }
+
+                    // --- SUBSCRIPTION LOGIC ---
+                    // Calculate Time Left from Real Expiry Date
+                    let diffDays = 0;
+                    if (user.expiryDate) {
+                        const expiry = new Date(user.expiryDate);
+                        const today = new Date();
+                        const diffTime = expiry - today;
+                        diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                    }
+
+                    if (diffDays < 0) diffDays = 0; // Don't show negative
+
+                    if (user.role === 'admin') {
+                        // 🔥 ADMIN OVERRIDES 🔥
+                        // Storage content is already handled above
+                        document.getElementById('daysRemaining').innerHTML = `Lifetime <span class="text-2xl">♾️</span>`;
+                        document.getElementById('renewalDate').innerHTML = `<span class="px-2 py-0.5 bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 rounded text-[10px] font-bold uppercase">System Administrator</span>`;
+                    } else if (user.plan === 'free') {
+                        // 🔥 FREE PLAN OVERRIDE 🔥
+                        document.getElementById('daysRemaining').innerHTML = `Free Plan`;
+                        document.getElementById('renewalDate').innerHTML = `<span class="text-green-400"><i class="fas fa-check-circle mr-1"></i>Forever Active</span>`;
+                    } else {
+                        // Normal User Logic (Pro/VIP)
+                        // Storage content is already handled above
+                        document.getElementById('daysRemaining').innerHTML = `${diffDays} <span class="text-xs text-gray-500">Days Left</span>`;
+                        document.getElementById('renewalDate').innerHTML = user.expiryDate ? `Renew: ${new Date(user.expiryDate).toLocaleDateString()}` : 'Lifetime Access';
+                    }
+
+                    renderProjects(); // Trigger Render
+
+                    // --- FORCE NEW PROJECT BUTTON LOCK (User Request) ---
+                    const newProjectBtn = document.getElementById('createProjectBtn');
+                    // Check limiting condition: Free User & >= 1 Project
+                    // OR dynamic limit reached
+                    const isFreeLimit = user.plan === 'free' && allProjects.length >= 1;
+                    const isDynamicLimit = planLimits.max_projects !== -1 && allProjects.length >= planLimits.max_projects;
+
+                    if ((isFreeLimit || isDynamicLimit) && user.role !== 'admin') {
+                        // Apply Lock Styles
+                        newProjectBtn.className = "flex-1 md:flex-none px-6 py-3 bg-gray-700 text-gray-400 font-bold rounded-xl shadow-none cursor-not-allowed flex items-center justify-center gap-2 transition";
+                        newProjectBtn.innerHTML = '<i class="fas fa-lock"></i> <span>Limit Reached</span>';
+                        // Force override onclick
+                        newProjectBtn.onclick = (e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            if (window.openConfirm) {
+                                openConfirm('Plan Limit Reached', `You have reached the limit of <b>${allProjects.length}</b> projects.<br><br>Upgrade to get more space and projects!`, 'Upgrade Now').then(yes => { if (yes) window.location.href = 'billing.html'; });
+                            } else { alert("Limit Reached. Please Upgrade."); }
+                        };
+                    } else {
+                        // Ensure Unlock
+                        newProjectBtn.className = "flex-1 md:flex-none px-6 py-3 bg-gradient-to-r from-primary to-secondary hover:opacity-90 text-white font-bold rounded-xl shadow-lg shadow-primary/25 transition transform hover:-translate-y-1 flex items-center justify-center gap-2";
+                        newProjectBtn.innerHTML = `<i class="fas fa-plus-circle"></i> <span class="hidden sm:inline">New Project</span><span class="sm:hidden">Create</span>`;
+                        newProjectBtn.onclick = checkLimitAndOpenModal;
+                    }
+                } else {
+                    showToast('Failed to load projects.', 'error');
+                }
+            } catch (error) {
+                loading.classList.add('hidden');
+                showToast('Server Connection Failed', 'error');
+            }
+        }
+
+        /* 2. Render Projects (UI) */
+        function renderProjects() {
+            const grid = document.getElementById('projectsGrid');
+            const empty = document.getElementById('emptyState');
+            grid.innerHTML = '';
+
+            // Filter
+            const filtered = allProjects.filter(p => {
+                if (currentFilter === 'all') return true;
+                if (currentFilter === 'active') return p.status !== 'archived';
+                if (currentFilter === 'archived') return p.status === 'archived';
+            });
+
+            if (filtered.length === 0) {
+                if (currentFilter === 'all') empty.classList.remove('hidden'); // Only show specific empty state for 'all', or maybe show a "No archived projects" msg?
+                // For now sticking to original empty state logic if All is empty.
+                if (allProjects.length === 0) empty.classList.remove('hidden');
+                else grid.innerHTML = `<p class="text-gray-500 text-center col-span-full py-10">No projects found in "${currentFilter}" filter.</p>`;
+                return;
+            }
+
+            empty.classList.add('hidden');
+
+            filtered.forEach((proj, index) => {
+                const delay = index * 50;
+                const isArchived = proj.status === 'archived';
+                const statusColor = isArchived ? 'bg-gray-500' : 'bg-green-500';
+                const statusText = isArchived ? 'ARCHIVED' : 'LIVE';
+                const statusDot = isArchived ? 'bg-gray-400' : 'bg-green-500';
+
+                const card = document.createElement('div');
+                card.className = `glass p-6 rounded-2xl glass-hover flex flex-col h-full animate__animated animate__fadeInUp relative overflow-hidden`;
+                card.style.animationDelay = `${delay}ms`;
+                if (isArchived) card.classList.add('opacity-75', 'grayscale-[0.5]');
+
+                card.innerHTML = `
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-lg bg-gray-800 flex items-center justify-center text-xl text-primary border border-gray-700">
+                                <i class="fab fa-html5"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-bold text-white truncate max-w-[150px]">${proj.name}</h3>
+                                <div class="flex items-center gap-1.5">
+                                    <span class="w-2 h-2 rounded-full ${statusDot} ${!isArchived ? 'animate-pulse' : ''}"></span>
+                                    <span class="text-[10px] text-gray-400 uppercase font-mono">${statusText}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <button onclick="deleteProject('${proj.name}')" class="text-gray-500 hover:text-red-500 transition p-2 hover:bg-red-500/10 rounded-lg">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                    </div>
+
+                    <div class="mt-auto space-y-3">
+                        ${!isArchived ? `
+                        <div class="p-3 bg-gray-900/50 rounded-lg border border-gray-800 mb-3">
+                            <p class="text-[10px] text-gray-500 uppercase font-bold mb-1">Public URL</p>
+                            <a href="${proj.url}" target="_blank" class="text-xs text-blue-400 hover:text-blue-300 truncate block font-mono hover:underline">
+                                ${proj.url}
+                            </a>
+                        </div>` :
+                        `<div class="p-3 bg-red-900/20 rounded-lg border border-red-900/50 mb-3">
+                            <p class="text-xs text-red-400 font-bold"><i class="fas fa-archive mr-1"></i> Archived</p>
+                            <p class="text-[10px] text-red-300/70">Restore to access URL</p>
+                        </div>`}
+                        
+                        <div class="flex gap-2">
+                             ${!isArchived ? `
+                            <a href="${proj.url}" target="_blank" class="flex-1 py-2.5 bg-primary hover:bg-primary/90 text-white text-center rounded-lg text-xs font-bold transition flex items-center justify-center gap-2">
+                                <i class="fas fa-external-link-alt"></i> Visit
+                            </a>` : ''}
+                            
+                            <a href="manage.html?project=${proj.name}" class="flex-1 py-2.5 bg-gray-700 hover:bg-gray-600 text-gray-300 rounded-lg text-xs font-bold transition text-center flex items-center justify-center gap-2">
+                                Manage <i class="fas fa-cog"></i>
+                            </a>
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        /* 3. Filter Handlers */
+        function setFilter(type, btn) {
+            currentFilter = type;
+
+            // Update UI Buttons
+            document.querySelectorAll('.filter-btn').forEach(b => {
+                b.className = "px-4 py-2 text-xs font-bold text-gray-400 hover:text-white hover:bg-gray-800 rounded-lg whitespace-nowrap transition filter-btn";
+            });
+
+            // Active State
+            btn.className = "px-4 py-2 text-xs font-bold text-white bg-gray-800 rounded-lg hover:bg-gray-700 whitespace-nowrap transition filter-btn ring-1 ring-gray-700";
+
+            renderProjects();
+        }
+
+        // --- DELETE LOGIC ---
+        async function deleteProject(projectName) {
+            if (!await openConfirm('Delete Project', `⚠️ DELETE "${projectName}"?\n\nThis action is permanent.`, 'Delete Forever', true)) return;
+
+            showToast('Deleting project files...', 'info');
+
+            try {
+                const res = await fetch(`${API_URL}/delete-project`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username: user.username, projectName: projectName })
+                });
+                const data = await res.json();
+
+                if (data.success) {
+                    showToast('Project deleted successfully', 'success');
+                    setTimeout(loadProjects, 1000);
+                } else {
+                    showToast('Failed. Folder might be empty.', 'error');
+                }
+            } catch (err) {
+                console.log(err);
+                showToast('API Error', 'error');
+            }
+        }
+
+        // Limit Check Logic
+        function checkLimitAndOpenModal() {
+            if (!window.userPlanLimits) return openModal(); // Fallback
+
+            const limits = window.userPlanLimits;
+            const currentCount = allProjects.length;
+
+            if (limits.max_projects !== -1 && currentCount >= limits.max_projects) {
+                // Show Upgrade Toast/Modal
+                if (window.openConfirm) {
+                    openConfirm(
+                        'Project Limit Reached',
+                        `You have reached the limit of <b>${limits.max_projects}</b> projects for the <b>${user.plan.toUpperCase()}</b> plan.<br><br>Upgrade to get more space and projects!`,
+                        'Upgrade Now'
+                    ).then(yes => {
+                        if (yes) window.location.href = 'billing.html';
+                    });
+                } else {
+                    alert("Project Limit Reached! Please Upgrade.");
+                }
+                return;
+            }
+
+            openModal();
+        }
+
+
+
+        // --- DEPLOY LOGIC ---
+        const modal = document.getElementById('deployModal');
+        const fileInput = document.getElementById('fileInput');
+
+        function openModal() { modal.classList.remove('hidden'); }
+        function closeModal() { modal.classList.add('hidden'); resetForm(); }
+        function resetForm() {
+            document.getElementById('deployForm').reset();
+            document.getElementById('progressBarContainer').classList.add('hidden');
+            document.getElementById('fileCount').textContent = 'Must include index.html';
+            document.getElementById('fileCount').className = 'text-xs text-gray-500 mt-1';
+        }
+
+        fileInput.addEventListener('change', function () {
+            if (this.files.length > 0) {
+                const count = document.getElementById('fileCount');
+                count.innerHTML = `<i class="fas fa-check text-green-400"></i> ${this.files.length} Files ready`;
+                count.className = 'text-xs text-green-400 font-bold mt-1';
+                document.getElementById('dropZone').classList.add('border-primary', 'bg-primary/5');
+            }
+        });
+
+        document.getElementById('deployForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const projectName = document.getElementById('projectName').value;
+            const files = fileInput.files;
+
+            if (files.length === 0) { showToast('Please select files!', 'error'); return; }
+
+            // UI Updates
+            const btn = document.getElementById('deployBtn');
+            const pBar = document.getElementById('progressBar');
+            const pText = document.getElementById('progressPercent');
+
+            btn.disabled = true;
+            btn.innerHTML = '<span class="loader w-5 h-5 border-2"></span> Uploading...';
+            document.getElementById('progressBarContainer').classList.remove('hidden');
+
+            let success = 0;
+            for (let i = 0; i < files.length; i++) {
+                const formData = new FormData();
+                formData.append('username', user.username);
+                formData.append('projectName', projectName);
+                formData.append('fileName', files[i].name);
+                formData.append('file', files[i]);
+
+                try {
+                    await fetch(`${API_URL}/deploy`, { method: 'POST', body: formData });
+                    success++;
+
+                    // Update Progress
+                    const percent = Math.round(((i + 1) / files.length) * 100);
+                    pBar.style.width = `${percent}%`;
+                    pText.textContent = `${percent}%`;
+                } catch (err) { console.error(err); }
+            }
+
+            if (success > 0) {
+                showToast(`🚀 Deployed ${success} files successfully!`, 'success');
+                closeModal();
+                loadProjects();
+            } else {
+                showToast('Deployment failed.', 'error');
+            }
+
+            btn.disabled = false;
+            btn.innerHTML = 'Launch Project <i class="fas fa-rocket"></i>';
+        });
+
+        // Initialize
+
+        // Initialize
+        loadProjects();
+    </script>
+</body>
+
+</html>

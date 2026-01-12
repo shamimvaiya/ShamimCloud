@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shamim Cloud | Deploy Your Dreams</title>
+    <meta name="description" content="The fastest cloud hosting for developers. Build, deploy, and scale in seconds.">
+
+    <!-- Dependencies -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700&family=Space+Grotesk:wght@300;500;700&display=swap"
+        rel="stylesheet">
+
+    <!-- Custom Config -->
+    <script>
+        // AUTH REDIRECT
+        if (localStorage.getItem('shamim_user')) {
+            window.location.href = 'dashboard.html';
+        }
+
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Outfit', 'sans-serif'],
+                        mono: ['Space Grotesk', 'monospace'],
+                    },
+                    colors: {
+                        dark: '#030712',
+                        primary: '#6366f1',
+                        secondary: '#a855f7',
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'blob': 'blob 7s infinite',
+                        'glow': 'glow 2s ease-in-out infinite alternate',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-20px)' },
+                        },
+                        blob: {
+                            '0%': { transform: 'translate(0px, 0px) scale(1)' },
+                            '33%': { transform: 'translate(30px, -50px) scale(1.1)' },
+                            '66%': { transform: 'translate(-20px, 20px) scale(0.9)' },
+                            '100%': { transform: 'translate(0px, 0px) scale(1)' },
+                        },
+                        glow: {
+                            'from': { boxShadow: '0 0 10px -10px #eab308' },
+                            'to': { boxShadow: '0 0 20px 5px #eab308' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Custom Utilities */
+        .glass {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .glass-nav {
+            background: rgba(3, 7, 18, 0.7);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .text-gradient {
+            background: linear-gradient(to right, #818cf8, #c084fc, #f472b6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .bento-card {
+            transition: all 0.3s ease;
+        }
+
+        .bento-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(168, 85, 247, 0.5);
+            box-shadow: 0 10px 40px -10px rgba(168, 85, 247, 0.2);
+        }
+
+        /* Grid Background Pattern */
+        .grid-bg {
+            background-size: 50px 50px;
+            background-image: linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+        }
+    </style>
+</head>
+
+<body class="bg-dark text-white overflow-x-hidden selection:bg-purple-500 selection:text-white">
+
+    <!-- NAVBAR -->
+    <nav class="fixed w-full z-50 glass-nav transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+            <a href="#" class="flex items-center gap-2 group">
+                <div
+                    class="w-10 h-10 bg-gradient-to-tr from-indigo-600 to-purple-600 rounded-xl flex items-center justify-center text-xl font-bold transform group-hover:rotate-12 transition-transform">
+                    <i class="fas fa-bolt"></i>
+                </div>
+                <span class="text-xl font-bold font-mono tracking-tighter">Shamim<span
+                        class="text-indigo-400">Cloud</span></span>
+            </a>
+
+            <div class="hidden md:flex items-center gap-8 text-sm font-medium text-gray-400">
+                <a href="#features" class="hover:text-white transition-colors">Features</a>
+                <a href="#pricing" class="hover:text-white transition-colors">Pricing</a>
+                <a href="#about" class="hover:text-white transition-colors">About</a>
+            </div>
+
+            <div class="flex items-center gap-4">
+                <a href="login.html"
+                    class="hidden md:block text-sm font-medium text-gray-300 hover:text-white transition">Log in</a>
+                <a href="register.html"
+                    class="px-5 py-2.5 rounded-full bg-white text-dark font-bold text-sm hover:bg-gray-200 transition transform hover:scale-105 shadow-[0_0_20px_rgba(255,255,255,0.3)]">
+                    Get Started <i class="fas fa-arrow-right ml-1"></i>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- HERO SECTION -->
+    <section class="relative min-h-screen flex items-center pt-20 overflow-hidden">
+        <!-- Animated Blobs -->
+        <div class="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
+            <div
+                class="absolute top-[-10%] left-[20%] w-[500px] h-[500px] bg-indigo-600/20 rounded-full blur-[100px] animate-blob">
+            </div>
+            <div class="absolute bottom-[-10%] right-[20%] w-[500px] h-[500px] bg-purple-600/20 rounded-full blur-[100px] animate-blob"
+                style="animation-delay: 2s"></div>
+            <div class="absolute top-[40%] left-[50%] w-[300px] h-[300px] bg-cyan-600/10 rounded-full blur-[100px] animate-blob"
+                style="animation-delay: 4s"></div>
+        </div>
+
+        <div class="absolute inset-0 grid-bg pointer-events-none"></div>
+
+        <div class="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-12 items-center relative z-10">
+            <!-- Left: Content -->
+            <div class="space-y-8">
+                <div
+                    class="inline-flex items-center gap-2 px-4 py-2 rounded-full glass border-indigo-500/30 text-indigo-300 text-xs font-bold uppercase tracking-wider animate__animated animate__fadeInDown">
+                    <span class="w-2 h-2 rounded-full bg-green-400 animate-pulse"></span> v2.0 is Live
+                </div>
+
+                <h1 class="text-5xl md:text-7xl font-mono font-bold leading-tight">
+                    Deploy your <br>
+                    <span class="text-gradient" id="typewriter">Ideas.</span>
+                </h1>
+
+                <p class="text-xl text-gray-400 max-w-lg leading-relaxed">
+                    The fastest cloud hosting for developers. No config, just code. Move from localhost to https in
+                    seconds.
+                </p>
+
+                <div class="flex flex-wrap items-center gap-4">
+                    <a href="register.html"
+                        class="px-8 py-4 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-bold text-lg shadow-lg shadow-indigo-600/25 transition-all transform hover:scale-105 flex items-center gap-2">
+                        Start Building <i class="fas fa-rocket"></i>
+                    </a>
+                    <a href="#how-it-works"
+                        class="px-8 py-4 rounded-xl glass hover:bg-white/5 transition-all font-medium flex items-center gap-2 group">
+                        How it Works <i class="fas fa-chevron-down group-hover:translate-y-1 transition-transform"></i>
+                    </a>
+                </div>
+
+                <div class="flex items-center gap-6 pt-4 text-gray-500 text-sm font-mono">
+                    <span class="flex items-center gap-2"><i class="fas fa-check text-green-400"></i> No Credit
+                        Card</span>
+                    <span class="flex items-center gap-2"><i class="fas fa-check text-green-400"></i> Free Tier</span>
+                    <span class="flex items-center gap-2"><i class="fas fa-check text-green-400"></i> 99.9%
+                        Uptime</span>
+                </div>
+            </div>
+
+            <!-- Right: Visual -->
+            <div class="relative hidden md:block">
+                <!-- Code Window -->
+                <div
+                    class="relative w-full max-w-lg mx-auto bg-[#0F1117] rounded-xl border border-gray-800 shadow-2xl animate-float overflow-hidden">
+                    <!-- Title Bar -->
+                    <div class="flex items-center px-4 py-3 border-b border-gray-800 bg-[#161b22]">
+                        <div class="flex gap-2">
+                            <div class="w-3 h-3 rounded-full bg-red-500"></div>
+                            <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+                            <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                        </div>
+                        <div class="mx-auto text-xs text-gray-500 font-mono">server.js</div>
+                    </div>
+                    <!-- Code -->
+                    <div class="p-6 font-mono text-sm space-y-2">
+                        <div class="flex"><span class="text-gray-600 w-6 select-none">1</span> <span
+                                class="text-purple-400">const</span> <span class="text-blue-400">app</span> = <span
+                                class="text-yellow-300">express</span>();</div>
+                        <div class="flex"><span class="text-gray-600 w-6 select-none">2</span> <span
+                                class="text-purple-400">const</span> <span class="text-blue-400">port</span> = <span
+                                class="text-orange-300">3000</span>;</div>
+                        <div class="flex"><span class="text-gray-600 w-6 select-none">3</span> </div>
+                        <div class="flex"><span class="text-gray-600 w-6 select-none">4</span> <span
+                                class="text-blue-400">app</span>.<span class="text-yellow-300">get</span>(<span
+                                class="text-green-400">'/'</span>, (<span class="text-blue-400">req</span>, <span
+                                class="text-blue-400">res</span>) => {</div>
+                        <div class="flex"><span class="text-gray-600 w-6 select-none">5</span> &nbsp;&nbsp;<span
+                                class="text-blue-400">res</span>.<span class="text-yellow-300">send</span>(<span
+                                class="text-green-400">'Hello World!'</span>);</div>
+                        <div class="flex"><span class="text-gray-600 w-6 select-none">6</span> });</div>
+                        <div class="flex"><span class="text-gray-600 w-6 select-none">7</span> </div>
+                        <div class="flex"><span class="text-gray-600 w-6 select-none">8</span> <span
+                                class="text-blue-400">app</span>.<span class="text-yellow-300">listen</span>(<span
+                                class="text-blue-400">port</span>, () => {</div>
+                        <div class="flex"><span class="text-gray-600 w-6 select-none">9</span> &nbsp;&nbsp;<span
+                                class="text-blue-400">console</span>.<span class="text-yellow-300">log</span>(<span
+                                class="text-green-400">'Server running...'</span>);</div>
+                        <div class="flex"><span class="text-gray-600 w-6 select-none">10</span> });</div>
+                    </div>
+
+                    <!-- Floating Badge -->
+                    <div
+                        class="absolute bottom-6 right-6 bg-green-500/10 border border-green-500/20 text-green-400 px-3 py-1 rounded-full text-xs font-bold animate-pulse">
+                        <i class="fas fa-circle text-[8px] mr-1"></i> Connected
+                    </div>
+                </div>
+
+                <!-- Decorative Elements -->
+                <div class="absolute -z-10 top-10 -right-10 w-40 h-40 bg-purple-500/20 rounded-full blur-xl"></div>
+                <div class="absolute -z-10 bottom-10 -left-10 w-40 h-40 bg-indigo-500/20 rounded-full blur-xl"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FEATURES BENTO GRID -->
+    <section id="features" class="py-24 relative">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4 font-mono">Everything you need to <span
+                        class="text-indigo-400">Scale</span></h2>
+                <p class="text-gray-400">Powerful features wrapped in a simple interface.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 auto-rows-[250px]">
+                <!-- Large Card -->
+                <div class="md:col-span-2 glass bento-card rounded-3xl p-8 relative overflow-hidden group">
+                    <div
+                        class="absolute top-0 right-0 p-8 opacity-20 group-hover:opacity-40 transition group-hover:scale-110 duration-500">
+                        <i class="fas fa-globe text-9xl text-indigo-500"></i>
+                    </div>
+                    <div class="relative z-10 h-full flex flex-col justify-end">
+                        <div
+                            class="w-12 h-12 rounded-xl bg-indigo-500/20 flex items-center justify-center text-indigo-400 text-2xl mb-4">
+                            <i class="fas fa-bolt"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-2">Instant Global Deployments</h3>
+                        <p class="text-gray-400">Push to git and your site is live around the world in seconds. Built on
+                            top of a supercharged edge network.</p>
+                    </div>
+                </div>
+
+                <!-- Standard Card -->
+                <div class="glass bento-card rounded-3xl p-8 flex flex-col justify-end">
+                    <div
+                        class="w-12 h-12 rounded-xl bg-purple-500/20 flex items-center justify-center text-purple-400 text-2xl mb-4">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">DDoS Protection</h3>
+                    <p class="text-sm text-gray-400">Enterprise-grade security included in every plan. Sleep safe.</p>
+                </div>
+
+                <!-- Standard Card -->
+                <div class="glass bento-card rounded-3xl p-8 flex flex-col justify-end">
+                    <div
+                        class="w-12 h-12 rounded-xl bg-pink-500/20 flex items-center justify-center text-pink-400 text-2xl mb-4">
+                        <i class="fas fa-lock"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Free SSL Certificates</h3>
+                    <p class="text-sm text-gray-400">Auto-renewing SSL for all your custom domains.</p>
+                </div>
+
+                <!-- Wide Card -->
+                <div class="md:col-span-2 glass bento-card rounded-3xl p-8 relative overflow-hidden group">
+                    <div
+                        class="absolute -right-10 -bottom-10 w-64 h-64 bg-gradient-to-tl from-cyan-500/20 to-transparent rounded-full">
+                    </div>
+                    <div class="relative z-10 h-full flex flex-col justify-end">
+                        <div
+                            class="w-12 h-12 rounded-xl bg-cyan-500/20 flex items-center justify-center text-cyan-400 text-2xl mb-4">
+                            <i class="fas fa-code"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-2">Browser-Based Editor</h3>
+                        <p class="text-gray-400">Fix bugs and edit code directly from your dashboard without cloning. A
+                            full IDE in the cloud.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- HOW IT WORKS -->
+    <section id="how-it-works" class="py-24 bg-black/30 border-y border-white/5">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold font-mono">From Local to <span
+                        class="text-gradient">Live</span></h2>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8 relative">
+                <!-- Connecting Line -->
+                <div
+                    class="hidden md:block absolute top-1/2 left-0 w-full h-1 bg-gradient-to-r from-indigo-500/20 via-purple-500/20 to-indigo-500/20 -translate-y-1/2 border-t border-dashed border-gray-600">
+                </div>
+
+                <!-- Step 1 -->
+                <div class="relative z-10 text-center bg-dark p-6 rounded-2xl border border-gray-800">
+                    <div
+                        class="w-20 h-20 mx-auto bg-gray-800 rounded-full flex items-center justify-center text-3xl mb-6 border-4 border-dark shadow-xl">
+                        📂
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">1. Upload Project</h3>
+                    <p class="text-gray-400 text-sm">Drag & drop your project folder or ZIP file.</p>
+                </div>
+
+                <!-- Step 2 -->
+                <div class="relative z-10 text-center bg-dark p-6 rounded-2xl border border-gray-800">
+                    <div
+                        class="w-20 h-20 mx-auto bg-indigo-600 rounded-full flex items-center justify-center text-3xl text-white mb-6 border-4 border-dark shadow-xl animate-pulse">
+                        ⚡
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">2. Magic Build</h3>
+                    <p class="text-gray-400 text-sm">We detect your stack and build automatically.</p>
+                </div>
+
+                <!-- Step 3 -->
+                <div class="relative z-10 text-center bg-dark p-6 rounded-2xl border border-gray-800">
+                    <div
+                        class="w-20 h-20 mx-auto bg-green-500 rounded-full flex items-center justify-center text-3xl text-white mb-6 border-4 border-dark shadow-xl">
+                        🚀
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">3. Live URL</h3>
+                    <p class="text-gray-400 text-sm">Get a secure HTTPS link instantly shared.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PRICING -->
+    <section id="pricing" class="py-24">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold font-mono">Simple, Transparent Pricing</h2>
+                <p class="text-gray-400">Start for free, upgrade as you scale.</p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- Free -->
+                <div class="glass p-8 rounded-3xl border border-gray-800">
+                    <h3 class="text-gray-400 font-bold tracking-widest uppercase text-sm mb-4">Starter</h3>
+                    <div class="text-4xl font-bold mb-6" id="land_free_price">Free <span
+                            class="text-lg text-gray-500 font-normal">/ forever</span></div>
+                    <ul class="space-y-4 mb-8 text-gray-400">
+                        <li class="flex items-center gap-3"><i class="fas fa-check text-indigo-500"></i> <span
+                                id="land_free_projects">1 Project</span></li>
+                        <li class="flex items-center gap-3"><i class="fas fa-check text-indigo-500"></i> <span
+                                id="land_free_storage">100MB Storage</span></li>
+                        <li class="flex items-center gap-3"><i class="fas fa-check text-indigo-500"></i> Community
+                            Support</li>
+                    </ul>
+                    <a href="register.html"
+                        class="block w-full py-3 text-center rounded-xl bg-gray-800 hover:bg-gray-700 transition font-bold text-white">Start
+                        Free</a>
+                </div>
+
+                <!-- Pro -->
+                <div class="glass p-8 rounded-3xl border border-indigo-500/30 relative">
+                    <div
+                        class="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-indigo-500 text-white px-4 py-1 rounded-full text-xs font-bold">
+                        POPULAR</div>
+                    <h3 class="text-indigo-400 font-bold tracking-widest uppercase text-sm mb-4">Pro Developer</h3>
+                    <div class="text-4xl font-bold mb-6" id="land_pro_price">... <span
+                            class="text-lg text-gray-500 font-normal">/ mo</span></div>
+                    <ul class="space-y-4 mb-8 text-gray-300">
+                        <li class="flex items-center gap-3"><i class="fas fa-check text-indigo-400"></i> <span
+                                id="land_pro_projects">... Projects</span></li>
+                        <li class="flex items-center gap-3"><i class="fas fa-check text-indigo-400"></i> <span
+                                id="land_pro_storage">... Storage</span></li>
+                        <li class="flex items-center gap-3"><i class="fas fa-check text-indigo-400"></i> Priority Build
+                            Queue</li>
+                    </ul>
+                    <a href="register.html"
+                        class="block w-full py-3 text-center rounded-xl bg-indigo-600 hover:bg-indigo-500 transition font-bold text-white shadow-lg shadow-indigo-600/20">Get
+                        Pro</a>
+                </div>
+
+                <!-- VIP -->
+                <div class="glass p-8 rounded-3xl border border-yellow-500/50 relative overflow-hidden group">
+                    <div class="absolute inset-0 bg-yellow-500/5 animate-pulse"></div>
+                    <h3 class="text-yellow-400 font-bold tracking-widest uppercase text-sm mb-4">VIP Unlimited</h3>
+                    <div class="text-4xl font-bold mb-6" id="land_vip_price">... <span
+                            class="text-lg text-gray-500 font-normal">/ mo</span></div>
+                    <ul class="space-y-4 mb-8 text-gray-300 relative z-10">
+                        <li class="flex items-center gap-3"><i class="fas fa-star text-yellow-400"></i> <span
+                                id="land_vip_projects">Unlimited Projects</span></li>
+                        <li class="flex items-center gap-3"><i class="fas fa-star text-yellow-400"></i> <span
+                                id="land_vip_storage">... Storage</span></li>
+                        <li class="flex items-center gap-3"><i class="fas fa-star text-yellow-400"></i> 24/7 Dedicated
+                            Support</li>
+                    </ul>
+                    <a href="register.html"
+                        class="relative z-10 block w-full py-3 text-center rounded-xl bg-gradient-to-r from-yellow-500 to-amber-600 hover:from-yellow-400 hover:to-amber-500 transition font-bold text-black shadow-lg shadow-yellow-500/20 animate-glow">Go
+                        Unlimited</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="border-t border-gray-800 bg-black/50 pt-16 pb-8">
+        <div class="max-w-7xl mx-auto px-6 grid md:grid-cols-4 gap-12 mb-12">
+            <div class="col-span-2">
+                <a href="#" class="flex items-center gap-2 mb-4">
+                    <div class="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center">
+                        <i class="fas fa-bolt text-white text-sm"></i>
+                    </div>
+                    <span class="text-xl font-bold font-mono">Shamim<span class="text-indigo-400">Cloud</span></span>
+                </a>
+                <p class="text-gray-500 text-sm max-w-sm">
+                    Empowering developers to build the future. We provide the infrastructure, you provide the code.
+                </p>
+                <div class="flex gap-4 mt-6">
+                    <a href="#"
+                        class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center text-gray-400 hover:bg-indigo-600 hover:text-white transition"><i
+                            class="fab fa-twitter"></i></a>
+                    <a href="#"
+                        class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center text-gray-400 hover:bg-gray-700 hover:text-white transition"><i
+                            class="fab fa-github"></i></a>
+                    <a href="#"
+                        class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center text-gray-400 hover:bg-blue-600 hover:text-white transition"><i
+                            class="fab fa-discord"></i></a>
+                </div>
+            </div>
+
+            <div>
+                <h4 class="font-bold mb-4">Product</h4>
+                <ul class="space-y-2 text-sm text-gray-500">
+                    <li><a href="#" class="hover:text-indigo-400 transition">Features</a></li>
+                    <li><a href="#" class="hover:text-indigo-400 transition">Pricing</a></li>
+                    <li><a href="#" class="hover:text-indigo-400 transition">Showcase</a></li>
+                    <li><a href="#" class="hover:text-indigo-400 transition">Docs</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h4 class="font-bold mb-4">Legal</h4>
+                <ul class="space-y-2 text-sm text-gray-500">
+                    <li><a href="#" class="hover:text-indigo-400 transition">Privacy</a></li>
+                    <li><a href="#" class="hover:text-indigo-400 transition">Terms</a></li>
+                    <li><a href="#" class="hover:text-indigo-400 transition">Status</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="max-w-7xl mx-auto px-6 pt-8 border-t border-gray-800 text-center text-sm text-gray-600">
+            &copy; 2024 Shamim Cloud. All rights reserved.
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
+        // Simple Link Interception for smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // 🔥 DYNAMIC PRICING FETCH 🔥
+        async function loadPricing() {
+            try {
+                const res = await axios.get('/api/get-plans');
+                if (res.data.success) {
+                    const p = res.data.plans;
+
+                    // Helper to format text
+                    const setTxt = (id, val) => {
+                        const el = document.getElementById(id);
+                        if (el) el.innerText = val;
+                    }
+
+                    // Helper for storage
+                    const formatStorage = (mb) => mb >= 1024 ? (mb / 1024) + 'GB' : mb + 'MB';
+
+                    // FREE
+                    // Free is usually static regarding price (0), but let's sync limits
+                    setTxt('land_free_projects', p.free.max_projects + ' Project');
+                    setTxt('land_free_storage', formatStorage(p.free.storage) + ' Storage');
+
+                    // PRO
+                    setTxt('land_pro_price', '৳' + p.pro.price);
+                    setTxt('land_pro_projects', p.pro.max_projects + ' Projects');
+                    setTxt('land_pro_storage', formatStorage(p.pro.storage) + ' Storage');
+
+                    // VIP
+                    setTxt('land_vip_price', '৳' + p.vip.price);
+                    setTxt('land_vip_projects', (p.vip.max_projects === -1 ? 'Unlimited' : p.vip.max_projects) + ' Projects');
+                    setTxt('land_vip_storage', formatStorage(p.vip.storage) + ' Storage');
+                }
+            } catch (e) {
+                console.error("Failed to load pricing", e);
+            }
+        }
+
+        loadPricing();
+
+        // Check Login State for Navbar
+        const user = JSON.parse(localStorage.getItem('shamim_user'));
+        if (user) {
+            // Update "Log in" to "Dashboard"
+            const loginBtn = document.querySelector('a[href="login.html"]');
+            if (loginBtn) {
+                loginBtn.href = 'dashboard.html';
+                loginBtn.innerText = 'Dashboard';
+            }
+            // Update "Get Started" to "Go to Console"
+            const getStartedBtn = document.querySelector('a[href="register.html"]');
+            if (getStartedBtn) {
+                getStartedBtn.href = 'dashboard.html';
+                getStartedBtn.innerHTML = 'Go to Console <i class="fas fa-terminal ml-1"></i>';
+            }
+        }
+    </script>
+</body>
+
+</html>

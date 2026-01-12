@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>DevStudio | Shamim Cloud</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: { dark: '#030712', editor: '#1e293b', primary: '#7c3aed', secondary: '#db2777' },
+                    fontFamily: { mono: ['JetBrains Mono', 'monospace'], sans: ['Outfit', 'sans-serif'] }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+        body {
+            background-color: #030712;
+            color: #e2e8f0;
+            font-family: 'Outfit', sans-serif;
+            overflow: hidden;
+        }
+
+        /* SCROLLBARS */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 3px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #7c3aed;
+        }
+
+        /* EDITOR SPECIFIC */
+        .code-area {
+            font-family: 'JetBrains Mono', monospace;
+            background-color: #1e293b;
+            color: #e2e8f0;
+            caret-color: #f472b6;
+            line-height: 1.6;
+            font-size: 14px;
+            tab-size: 2;
+        }
+
+        .line-numbers {
+            font-family: 'JetBrains Mono', monospace;
+            text-align: right;
+            color: #475569;
+            background-color: #0f172a;
+            padding-right: 12px;
+            padding-top: 16px;
+            /* Match textarea padding */
+            line-height: 1.6;
+            font-size: 14px;
+            user-select: none;
+        }
+
+        /* GLASS EFFECTS */
+        .glass-header {
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* MOBILE MENU */
+        #mobileMenu {
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .menu-open {
+            transform: translateX(0) !important;
+        }
+
+        .menu-closed {
+            transform: translateX(-100%) !important;
+        }
+
+        /* TAB ACTIVE STATES */
+        .tab-btn.active {
+            border-bottom: 2px solid #7c3aed;
+            color: white;
+            background: rgba(124, 58, 237, 0.1);
+        }
+
+        /* IFRAME LOADER */
+        .iframe-container {
+            background-image: url("data:image/svg+xml,...");
+        }
+
+        /* Optional Pattern */
+    </style>
+</head>
+
+<body class="flex flex-col h-screen">
+
+    <div id="mobileMenu"
+        class="fixed inset-y-0 left-0 w-72 bg-[#0f172a] z-[100] transform -translate-x-full border-r border-gray-800 shadow-2xl flex flex-col menu-closed lg:hidden">
+        <div class="p-6 border-b border-gray-800 flex justify-between items-center">
+            <h2 class="text-xl font-bold text-white flex items-center gap-2"><i class="fas fa-code text-primary"></i>
+                Studio</h2>
+            <button onclick="toggleMobileMenu()" class="text-gray-400 hover:text-white"><i
+                    class="fas fa-times text-xl"></i></button>
+        </div>
+        <nav class="flex-grow p-4 space-y-2">
+            <a href="index.html"
+                class="flex items-center gap-3 px-4 py-3 text-gray-400 hover:bg-gray-800 rounded-xl transition"><i
+                    class="fas fa-th-large"></i> Dashboard</a>
+            <a href="#"
+                class="flex items-center gap-3 px-4 py-3 bg-primary/10 text-primary rounded-xl border border-primary/20 font-bold"><i
+                    class="fas fa-code"></i> Code Editor</a>
+            <a href="settings.html"
+                class="flex items-center gap-3 px-4 py-3 text-gray-400 hover:bg-gray-800 rounded-xl transition"><i
+                    class="fas fa-cog"></i> Settings</a>
+        </nav>
+        <div class="p-4 border-t border-gray-800">
+            <button onclick="logout()"
+                class="w-full py-3 bg-red-600/10 text-red-500 rounded-xl font-bold">Logout</button>
+        </div>
+    </div>
+    <div id="menuOverlay" onclick="toggleMobileMenu()"
+        class="fixed inset-0 bg-black/80 z-[90] hidden backdrop-blur-sm lg:hidden"></div>
+
+    <!-- TRIAL TIMER (Sticky) -->
+    <div id="trialTimer"
+        class="h-8 bg-indigo-600 text-white text-xs font-bold flex items-center justify-center gap-2 hidden transition-all duration-300">
+        <i class="fas fa-stopwatch animate-pulse"></i> Free Trial: <span id="timerDisplay" class="font-mono">...</span>
+        left
+    </div>
+
+    <nav class="h-16 glass-header flex items-center justify-between px-4 sm:px-6 z-40 shrink-0">
+        <div class="flex items-center gap-4">
+            <button onclick="toggleMobileMenu()" class="lg:hidden p-2 text-gray-400 hover:text-white">
+                <i class="fas fa-bars text-xl"></i>
+            </button>
+
+            <a href="index.html"
+                class="hidden sm:flex w-10 h-10 rounded-xl bg-gray-800 items-center justify-center hover:bg-gray-700 transition">
+                <i class="fas fa-arrow-left text-gray-400"></i>
+            </a>
+
+            <div>
+                <h1 class="font-bold text-lg text-white tracking-wide flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+                    DevStudio <span
+                        class="text-[10px] bg-gray-800 px-1.5 py-0.5 rounded text-gray-400 border border-gray-700">PRO</span>
+                </h1>
+                <p class="text-[10px] text-gray-400 hidden sm:block">autosave enabled</p>
+            </div>
+        </div>
+
+        <div class="flex items-center gap-2 sm:gap-3">
+            <button onclick="runCodeManual()"
+                class="flex items-center gap-2 px-3 sm:px-4 py-2 bg-green-600 hover:bg-green-500 text-white rounded-lg transition shadow-lg shadow-green-500/20 font-bold text-xs uppercase tracking-wider">
+                <i class="fas fa-play"></i> <span class="hidden sm:inline">Run</span>
+            </button>
+            <button onclick="downloadCode()"
+                class="flex items-center gap-2 px-3 sm:px-4 py-2 bg-primary hover:bg-primary/80 text-white rounded-lg transition shadow-lg shadow-primary/20 font-bold text-xs uppercase tracking-wider">
+                <i class="fas fa-download"></i> <span class="hidden sm:inline">Export</span>
+            </button>
+            <div class="w-px h-8 bg-gray-700 mx-1 hidden sm:block"></div>
+            <img id="userAvatar" src="" class="w-8 h-8 rounded-full border border-gray-600 hidden sm:block">
+        </div>
+    </nav>
+
+    <main class="flex-grow flex flex-col lg:flex-row overflow-hidden relative">
+
+        <div class="w-full lg:w-1/2 flex flex-col border-r border-gray-800 bg-[#0f172a] h-full relative z-10">
+
+            <div class="flex bg-[#0b1120] border-b border-gray-800 overflow-x-auto hide-scroll shrink-0">
+                <button onclick="switchTab('html')" id="tab-html"
+                    class="tab-btn active flex-1 min-w-[80px] py-3 text-xs font-bold text-gray-400 hover:text-white transition uppercase tracking-wider flex items-center justify-center gap-2">
+                    <i class="fab fa-html5 text-orange-500"></i> HTML
+                </button>
+                <button onclick="switchTab('css')" id="tab-css"
+                    class="tab-btn flex-1 min-w-[80px] py-3 text-xs font-bold text-gray-400 hover:text-white transition uppercase tracking-wider flex items-center justify-center gap-2">
+                    <i class="fab fa-css3-alt text-blue-500"></i> CSS
+                </button>
+                <button onclick="switchTab('js')" id="tab-js"
+                    class="tab-btn flex-1 min-w-[80px] py-3 text-xs font-bold text-gray-400 hover:text-white transition uppercase tracking-wider flex items-center justify-center gap-2">
+                    <i class="fab fa-js text-yellow-500"></i> JS
+                </button>
+                <button onclick="toggleMobilePreview()"
+                    class="lg:hidden flex-1 min-w-[80px] py-3 text-xs font-bold text-gray-400 hover:text-white transition uppercase tracking-wider flex items-center justify-center gap-2 bg-gray-900">
+                    <i class="fas fa-eye text-green-400"></i> Result
+                </button>
+            </div>
+
+            <div class="relative flex-grow bg-[#1e293b] flex">
+
+                <div class="line-numbers w-12 hidden sm:block" id="lineNumbers">1</div>
+
+                <div class="relative flex-grow h-full">
+                    <textarea id="htmlCode"
+                        class="code-area w-full h-full p-4 outline-none resize-none absolute inset-0 z-10"
+                        spellcheck="false" placeholder="">
+<div class="container">
+  <div class="card">
+    <div class="icon"><i class="fas fa-rocket"></i></div>
+    <h1>Shamim Cloud</h1>
+    <p>Mobile Responsive Editor v2.0</p>
+    <button onclick="clicked()">Test Me</button>
+  </div>
+</div>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"></textarea>
+
+                    <textarea id="cssCode"
+                        class="code-area w-full h-full p-4 outline-none resize-none absolute inset-0 hidden"
+                        spellcheck="false" placeholder="/* Write CSS here */">
+body {
+  margin: 0;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(45deg, #0f172a, #1e1b4b);
+  font-family: sans-serif;
+  color: white;
+}
+.card {
+  background: rgba(255,255,255,0.05);
+  backdrop-filter: blur(10px);
+  padding: 2rem;
+  border-radius: 20px;
+  border: 1px solid rgba(255,255,255,0.1);
+  text-align: center;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+}
+.icon { font-size: 3rem; color: #7c3aed; margin-bottom: 1rem; }
+button {
+  margin-top: 1rem;
+  padding: 10px 24px;
+  background: #7c3aed;
+  border: none;
+  color: white;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: 0.3s;
+}
+button:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(124, 58, 237, 0.4); }</textarea>
+
+                    <textarea id="jsCode"
+                        class="code-area w-full h-full p-4 outline-none resize-none absolute inset-0 hidden"
+                        spellcheck="false" placeholder="// Write JavaScript here">
+function clicked() {
+  const btn = document.querySelector('button');
+  btn.innerText = "Working!";
+  btn.style.background = "#10b981";
+
+  // Console Log Test
+  console.log("Button clicked at: " + new Date().toLocaleTimeString());
+}</textarea>
+                </div>
+            </div>
+
+            <div
+                class="bg-[#0b1120] px-4 py-1.5 text-[10px] text-gray-500 flex justify-between items-center border-t border-gray-800 shrink-0">
+                <span id="cursorPos">Ln 1, Col 1</span>
+                <span class="flex items-center gap-2"><i class="fas fa-check text-green-500"></i> Ready</span>
+            </div>
+        </div>
+
+        <div id="previewPanel"
+            class="fixed lg:static inset-0 z-30 lg:z-auto w-full lg:w-1/2 bg-white flex flex-col transform translate-x-full lg:translate-x-0 transition-transform duration-300">
+
+            <div
+                class="lg:hidden bg-gray-900 text-white p-3 flex justify-between items-center border-b border-gray-700">
+                <span class="font-bold text-sm"><i class="fas fa-eye mr-2 text-green-400"></i> Live Preview</span>
+                <button onclick="toggleMobilePreview()" class="text-gray-400 hover:text-white"><i
+                        class="fas fa-times"></i> Close</button>
+            </div>
+
+            <div class="hidden lg:flex bg-gray-100 border-b border-gray-200 px-4 py-2 justify-between items-center">
+                <div class="flex gap-1.5">
+                    <div class="w-2.5 h-2.5 rounded-full bg-red-400"></div>
+                    <div class="w-2.5 h-2.5 rounded-full bg-yellow-400"></div>
+                    <div class="w-2.5 h-2.5 rounded-full bg-green-400"></div>
+                </div>
+                <span class="text-xs font-bold text-gray-400 uppercase">index.html</span>
+                <i class="fas fa-redo-alt text-gray-400 text-xs cursor-pointer hover:text-gray-600"
+                    onclick="runCodeManual()"></i>
+            </div>
+
+            <iframe id="previewFrame" class="w-full flex-grow border-none bg-white"></iframe>
+
+            <div class="bg-[#0f172a] border-t border-gray-800 flex flex-col">
+                <button onclick="toggleConsole()"
+                    class="w-full bg-[#0b1120] text-gray-400 text-xs font-bold py-1 px-4 text-left hover:text-white flex justify-between items-center">
+                    <span><i class="fas fa-terminal mr-2"></i>Console Output</span>
+                    <i class="fas fa-chevron-up transition-transform" id="consoleArrow"></i>
+                </button>
+                <div id="consoleBody"
+                    class="h-0 overflow-y-auto transition-all duration-300 bg-[#0f172a] font-mono text-xs p-0 text-green-400">
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+
+
+    <script src="js/ui-utils.js"></script>
+    <script>
+        // --- 1. SETUP & AUTH ---
+        const user = JSON.parse(localStorage.getItem('shamim_user'));
+        if (user) document.getElementById('userAvatar').src = `https://ui-avatars.com/api/?name=${user.username}&background=7c3aed&color=fff`;
+
+        // 🔥 RESTRICTION CHECK & TRIAL LOGIC 🔥
+        let trialInterval;
+        let trialSeconds = 0;
+
+        async function checkAccess() {
+            if (!user || user.plan === 'pro' || user.plan === 'vip' || user.plan === 'vip_unlimited') {
+                return; // Pro/VIP: No restrictions
+            }
+
+            // FREE User: Check Trial Status
+            // Initially Read-Only unless trial active
+            lockEditor(true, "Checking Trial Status...");
+
+            try {
+                const res = await fetch(`/api/trial/status?username=${user.username}`);
+                const data = await res.json();
+
+                if (data.success) {
+                    trialSeconds = data.remaining;
+                    if (data.reset) console.log("Daily Limit Reset!");
+
+                    if (trialSeconds > 0) {
+                        // Has time but need user to START it or Auto-resume if active recent?
+                        // Requirement says "When clicked". So shows button first.
+                        showTrialPrompt(trialSeconds);
+                    } else {
+                        lockEditor(true, "Daily Free Trial Limit Reached (0s left). Upgrade to Pro.");
+                    }
+                }
+            } catch (e) { console.error(e); }
+        }
+
+        function showTrialPrompt(seconds) {
+            // Check if we should auto-start or show button?
+            // "When clicked..." implies we show a button.
+            // But if they refresh page mid-trial, user expects resume.
+            // Let's simple check: if > 0, show "Start/Resume Trial" button overlay.
+
+            const overlay = document.createElement('div');
+            overlay.id = "trialOverlay";
+            overlay.className = "fixed bottom-4 right-4 bg-indigo-900/90 text-white px-6 py-4 rounded-xl shadow-2xl border border-indigo-500 z-50 animate__animated animate__fadeInUp";
+
+            const mins = Math.floor(seconds / 60);
+            overlay.innerHTML = `
+                <div class="flex items-center gap-3">
+                    <i class="fas fa-gift text-2xl text-yellow-400"></i>
+                    <div>
+                        <h4 class="font-bold">Daily Free Trial Available</h4>
+                        <p class="text-xs text-gray-300">You have ${mins} mins remaining today.</p>
+                    </div>
+                    <button onclick="startTrial()" class="ml-4 px-4 py-2 bg-white text-indigo-900 font-bold text-xs rounded-lg hover:bg-gray-200 transition">Start Editing</button>
+                    <a href="billing.html" class="ml-2 text-[10px] underline text-indigo-200">Upgrade</a>
+                </div>
+            `;
+            document.body.appendChild(overlay);
+        }
+
+        function startTrial() {
+            const overlay = document.getElementById('trialOverlay');
+            if (overlay) overlay.remove();
+
+            document.getElementById('trialTimer').classList.remove('hidden');
+            lockEditor(false); // Unlock
+
+            startCountdown();
+        }
+
+        function startCountdown() {
+            updateTimerDisplay();
+
+            // Local Countdown
+            trialInterval = setInterval(() => {
+                trialSeconds--;
+                updateTimerDisplay();
+
+                if (trialSeconds <= 0) {
+                    endTrial();
+                }
+            }, 1000);
+
+            // Heartbeat Logic (Every 10s)
+            setInterval(() => {
+                if (trialSeconds > 0) {
+                    fetch('/api/trial/heartbeat', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ username: user.username, deductedSeconds: 10 })
+                    });
+                }
+            }, 10000);
+        }
+
+        function endTrial() {
+            clearInterval(trialInterval);
+            trialSeconds = 0;
+            updateTimerDisplay();
+            document.getElementById('trialTimer').classList.add('bg-red-600');
+            lockEditor(true, "Daily Free Trial Ended. Upgrade for Unlimited Access.");
+        }
+
+        function updateTimerDisplay() {
+            const m = Math.floor(trialSeconds / 60).toString().padStart(2, '0');
+            const s = (trialSeconds % 60).toString().padStart(2, '0');
+            document.getElementById('timerDisplay').innerText = `${m}:${s}`;
+        }
+
+        function lockEditor(isLocked, msg = "Read-Only Mode") {
+            const areas = document.querySelectorAll('.code-area');
+            const saveBtn = document.getElementById('saveBtn'); // Not in editor.html directly, usually in modal, but here we don't have save btn in main view, wait.
+            // Ah, editor.html does not have a save button in the UI shown in file viewer? 
+            // Checking file... It has "Export" and "Run".
+            // "Save" implies persistence. If this is just a playground "DevStudio", maybe "Export" is the limit?
+            // But prompt said "Hide Save button". 
+            // EDITOR.HTML is likely the "DevStudio" which has 'Download Code'.
+            // Wait, manage.html has the "Edit File" modal with Save. 
+            // Prompt says "In public/editor.html ... set editor to Read Only ... and hide Save button".
+            // Looking at editor.html, I don't see a "Save" button in the nav. I see "Run" and "Export".
+            // Maybe "Run" is what they mean? Or maybe I should check if there is an autosave or hidden button.
+            // Line 159 says "autosave enabled".
+            // I will disabling textareas.
+
+            areas.forEach(el => {
+                el.readOnly = isLocked;
+                if (isLocked) {
+                    el.classList.add('opacity-50', 'cursor-not-allowed');
+                    // Optional: Inject header comment if empty or just once
+                } else {
+                    el.classList.remove('opacity-50', 'cursor-not-allowed');
+                }
+            });
+
+            if (isLocked && msg) {
+                showToast(msg, 'error'); // Using ui-utils toast
+            }
+        }
+
+        // Init
+        document.addEventListener('DOMContentLoaded', () => {
+            checkAccess();
+        });
+
+        // DOM Elements
+        const editors = {
+            html: document.getElementById('htmlCode'),
+            css: document.getElementById('cssCode'),
+            js: document.getElementById('jsCode')
+        };
+        const preview = document.getElementById('previewFrame');
+        const lineNums = document.getElementById('lineNumbers');
+        const consoleBody = document.getElementById('consoleBody');
+
+        // --- 2. EDITOR LOGIC ---
+
+        // Tab Switching
+        function switchTab(type) {
+            // Hide all textareas
+            Object.values(editors).forEach(el => el.classList.add('hidden'));
+            // Remove active class from buttons
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active', 'text-white');
+                btn.classList.add('text-gray-400');
+            });
+
+            // Show selected
+            editors[type].classList.remove('hidden');
+            const btn = document.getElementById(`tab-${type}`);
+            btn.classList.add('active', 'text-white');
+            btn.classList.remove('text-gray-400');
+
+            // Update Line Numbers for current view
+            updateLineNumbers(editors[type]);
+            // Close mobile preview if open
+            document.getElementById('previewPanel').classList.remove('translate-x-0');
+            document.getElementById('previewPanel').classList.add('translate-x-full', 'lg:translate-x-0');
+        }
+
+        // Line Numbers Logic
+        function updateLineNumbers(textarea) {
+            const lines = textarea.value.split('\n').length;
+            lineNums.innerHTML = Array(lines).fill(0).map((_, i) => i + 1).join('<br>');
+        }
+
+        // Cursor Position
+        Object.values(editors).forEach(el => {
+            el.addEventListener('input', () => updateLineNumbers(el));
+            el.addEventListener('scroll', () => lineNums.scrollTop = el.scrollTop); // Sync scroll
+            el.addEventListener('click', e => updateCursor(e));
+            el.addEventListener('keyup', e => { updateCursor(e); updateLineNumbers(el); });
+            el.addEventListener('keydown', e => {
+                if (e.key === 'Tab') {
+                    e.preventDefault();
+                    document.execCommand('insertText', false, '  ');
+                }
+            });
+        });
+
+        function updateCursor(e) {
+            const val = e.target.value.substr(0, e.target.selectionStart);
+            const line = val.split('\n').length;
+            const col = val.split('\n').pop().length + 1;
+            document.getElementById('cursorPos').innerText = `Ln ${line}, Col ${col}`;
+        }
+
+        // --- 3. RUN & PREVIEW LOGIC ---
+
+        function runCodeManual() {
+            const html = editors.html.value;
+            const css = `<style>${editors.css.value}</style>`;
+
+            // Console Override Script
+            const consoleScript = `
+                <script>
+                    const originalLog = console.log;
+                    console.log = function(...args) {
+                        window.parent.postMessage({type: 'console', msg: args.join(' ')}, '*');
+                        originalLog.apply(console, args);
+                    };
+                    window.onerror = function(msg, url, line) {
+                        window.parent.postMessage({type: 'error', msg: msg + " (Line " + line + ")"}, '*');
+                    };
+                <\/script>
+            `;
+
+            const js = `<script>${editors.js.value}<\/script>`;
+
+            const doc = preview.contentDocument || preview.contentWindow.document;
+            doc.open();
+            doc.write(consoleScript + html + css + js);
+            doc.close();
+
+            // Clear console
+            consoleBody.innerHTML = '<div class="p-2 text-gray-500 border-b border-gray-800">Console cleared. Running...</div>';
+
+            // Mobile: Show Preview
+            if (window.innerWidth < 1024) toggleMobilePreview();
+        }
+
+        // Auto Run (Debounced)
+        let timeout;
+        Object.values(editors).forEach(el => {
+            el.addEventListener('input', () => {
+                clearTimeout(timeout);
+                timeout = setTimeout(() => {
+                    // Only auto-run on desktop to prevent mobile keyboard lag
+                    if (window.innerWidth >= 1024) runCodeManual();
+                }, 1500);
+            });
+        });
+
+        // Console Message Handler
+        window.addEventListener('message', (e) => {
+            if (e.data.type === 'console') {
+                consoleBody.innerHTML += `<div class="p-2 border-b border-gray-800/50 hover:bg-white/5"> > ${e.data.msg}</div>`;
+            } else if (e.data.type === 'error') {
+                consoleBody.innerHTML += `<div class="p-2 border-b border-red-900/30 text-red-400 hover:bg-red-900/10"> ❌ ${e.data.msg}</div>`;
+            }
+            consoleBody.scrollTop = consoleBody.scrollHeight;
+        });
+
+        // --- 4. UI HELPERS ---
+
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobileMenu');
+            const overlay = document.getElementById('menuOverlay');
+            if (menu.classList.contains('menu-closed')) {
+                menu.classList.remove('menu-closed');
+                menu.classList.add('menu-open');
+                overlay.classList.remove('hidden');
+            } else {
+                menu.classList.add('menu-closed');
+                menu.classList.remove('menu-open');
+                overlay.classList.add('hidden');
+            }
+        }
+
+        function toggleMobilePreview() {
+            const panel = document.getElementById('previewPanel');
+            if (panel.classList.contains('translate-x-full')) {
+                panel.classList.remove('translate-x-full');
+            } else {
+                panel.classList.add('translate-x-full');
+            }
+        }
+
+        function toggleConsole() {
+            const body = document.getElementById('consoleBody');
+            const arrow = document.getElementById('consoleArrow');
+            if (body.classList.contains('h-0')) {
+                body.classList.remove('h-0');
+                body.classList.add('h-32');
+                arrow.style.transform = 'rotate(180deg)';
+            } else {
+                body.classList.add('h-0');
+                body.classList.remove('h-32');
+                arrow.style.transform = 'rotate(0deg)';
+            }
+        }
+
+        function downloadCode() {
+            const html = editors.html.value;
+            const css = `<style>${editors.css.value}</style>`;
+            const js = `<script>${editors.js.value}<\/script>`;
+            const content = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Exported</title>${css}</head><body>${html}${js}</body></html>`;
+
+            const blob = new Blob([content], { type: 'text/html' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url; a.download = 'project.html';
+            document.body.appendChild(a); a.click(); document.body.removeChild(a);
+
+            showToast('Project exported successfully!');
+        }
+
+        async function logout() {
+            if (await openConfirm('Log Out', 'Are you sure?')) {
+                window.location.href = 'login.html';
+            }
+        }
+
+        // Init
+        updateLineNumbers(editors.html);
+        runCodeManual(); // Initial run
+    </script>
+</body>
+
+</html>

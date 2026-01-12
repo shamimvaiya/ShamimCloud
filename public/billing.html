@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upgrade Plan | Shamim Cloud</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            background-color: #0f172a;
+            color: white;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        /* Glass Effect */
+        .glass-card {
+            background: rgba(30, 41, 59, 0.4);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.4s ease;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Check List Style */
+        .check-list li {
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #cbd5e1;
+            font-size: 0.95rem;
+        }
+
+        .check-list i {
+            font-size: 1.1rem;
+        }
+
+        .check-list i.check {
+            color: #4ade80;
+        }
+
+        .check-list i.cross {
+            color: #f87171;
+            opacity: 0.6;
+        }
+
+        /* Badge Animation */
+        .badge-shine {
+            position: absolute;
+            top: 0;
+            right: 0;
+            overflow: hidden;
+        }
+
+        .badge-shine::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            animation: shine 3s infinite;
+        }
+
+        @keyframes shine {
+            100% {
+                left: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body class="py-12 px-4 min-h-screen flex flex-col">
+
+    <div class="max-w-7xl mx-auto text-center mb-16 relative z-10">
+        <a href="index.html"
+            class="inline-flex items-center text-gray-400 hover:text-white mb-6 transition bg-gray-800/50 px-4 py-2 rounded-full border border-gray-700 hover:border-violet-500">
+            <i class="fas fa-arrow-left mr-2"></i> Return to Dashboard
+        </a>
+        <h1
+            class="text-5xl font-extrabold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-violet-400 via-fuchsia-400 to-pink-400">
+            Unlock Full Potential
+        </h1>
+        <p class="text-lg text-gray-400 max-w-2xl mx-auto">
+            Choose the perfect plan for your coding journey. From learning basics to building empires.
+        </p>
+    </div>
+
+    <!-- LOADER -->
+    <div id="pricing-loader" class="flex justify-center items-center min-h-[400px]">
+        <div class="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-purple-500"></div>
+    </div>
+
+    <div id="pricing-cards-container"
+        class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 relative z-10 mb-12 hidden animate__animated animate__fadeIn">
+
+        <div class="glass-card rounded-3xl p-8 flex flex-col relative overflow-hidden group">
+            <div class="absolute top-0 left-0 w-full h-1 bg-gray-600"></div>
+
+            <div class="mb-6">
+                <h3 class="text-xl font-bold text-gray-300 uppercase tracking-widest">Starter</h3>
+                <div class="flex items-baseline mt-4">
+                    <span class="text-5xl font-bold text-white">৳0</span>
+                    <span class="text-gray-500 ml-2 font-medium">/ forever</span>
+                </div>
+                <p class="text-sm text-gray-400 mt-2">Essential tools to start learning.</p>
+            </div>
+
+            <div class="w-full h-px bg-gray-700 mb-6"></div>
+
+            <ul class="check-list flex-grow">
+                <li id="free-project-limit"><i class="fas fa-check-circle check"></i> <b>...</b></li>
+                <li><i class="fas fa-check-circle check"></i> Basic Code Editor</li>
+                <li id="free-storage-limit"><i class="fas fa-hdd text-gray-500"></i> ...</li>
+                <li><i class="fas fa-times-circle cross"></i> No Source Code Download</li>
+                <li><i class="fas fa-times-circle cross"></i> "Powered by" Watermark</li>
+                <li><i class="fas fa-times-circle cross"></i> No Tech Support</li>
+            </ul>
+
+            <button
+                class="w-full mt-8 py-4 rounded-xl bg-gray-800 text-gray-500 font-bold border border-gray-700 cursor-not-allowed">
+                Loading...
+            </button>
+        </div>
+
+        <div
+            class="glass-card rounded-3xl p-8 flex flex-col border-2 border-violet-500/30 shadow-2xl shadow-violet-500/20 relative transform md:-translate-y-4">
+            <div
+                class="absolute top-0 right-0 bg-gradient-to-l from-violet-600 to-indigo-600 text-xs text-white font-bold px-4 py-1.5 rounded-bl-xl badge-shine shadow-lg">
+                MOST POPULAR
+            </div>
+
+            <div class="mb-6">
+                <h3 class="text-xl font-bold text-violet-400 uppercase tracking-widest">Pro Developer</h3>
+                <div class="flex items-baseline mt-4">
+                    <span class="text-5xl font-bold text-white" id="price_pro">...</span>
+                    <span class="text-gray-500 ml-2 font-medium" id="duration_pro">...</span>
+                </div>
+                <p class="text-sm text-gray-300 mt-2">For serious learners & portfolio building.</p>
+            </div>
+
+            <div class="w-full h-px bg-gradient-to-r from-transparent via-violet-500 to-transparent mb-6 opacity-50">
+            </div>
+
+            <ul class="check-list flex-grow">
+                <li id="pro-project-limit"><i class="fas fa-check-circle check"></i> <b>...</b></li>
+                <li id="pro-storage-limit"><i class="fas fa-check-circle check"></i> <b>...</b></li>
+                <li><i class="fas fa-check-circle check"></i> <b>Full Editor</b> (Download Enabled)</li>
+                <li><i class="fas fa-rocket check"></i> <b>2x Faster</b> Deployment</li>
+                <li><i class="fas fa-check-circle check"></i> Remove "Powered by" Mark</li>
+                <li><i class="fas fa-check-circle check"></i> Email Support (24h)</li>
+                <li><i class="fas fa-shield-alt check"></i> GitHub Backup Integration</li>
+            </ul>
+
+            <button onclick="openModal('Pro Developer', 50)" id="btn_pro"
+                class="w-full mt-8 py-4 rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white font-bold shadow-lg shadow-violet-600/30 transition-all hover:scale-[1.02]">
+                Loading... <i class="fas fa-bolt ml-2"></i>
+            </button>
+        </div>
+
+        <div
+            class="glass-card rounded-3xl p-8 flex flex-col border border-yellow-500/20 hover:border-yellow-500/50 relative group">
+            <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-yellow-500 to-amber-500"></div>
+
+            <div class="mb-6">
+                <h3 class="text-xl font-bold text-yellow-400 uppercase tracking-widest">VIP Unlimited</h3>
+                <div class="flex items-baseline mt-4">
+                    <span class="text-5xl font-bold text-white" id="price_vip">...</span>
+                    <span class="text-gray-500 ml-2 font-medium" id="duration_vip">...</span>
+                </div>
+                <p class="text-sm text-gray-400 mt-2">Total freedom for professionals.</p>
+            </div>
+
+            <div class="w-full h-px bg-gray-700 mb-6"></div>
+
+            <ul class="check-list flex-grow">
+                <li id="vip-project-limit"><i class="fas fa-infinity text-yellow-500"></i> <b>...</b></li>
+                <li id="vip-storage-limit"><i class="fas fa-hdd text-yellow-500"></i> <b>...</b></li>
+                <li><i class="fas fa-check-circle check"></i> <b>Full Screen</b> Editor Mode</li>
+                <li><i class="fas fa-file-contract check"></i> Commercial License</li>
+                <li><i class="fas fa-headset check"></i> <b>Priority</b> WhatsApp Support</li>
+                <li><i class="fas fa-file-archive check"></i> Download Project as ZIP</li>
+                <li><i class="fas fa-star check"></i> Early Access to New Features</li>
+            </ul>
+
+            <button id="btn-vip" onclick="openModal('VIP Unlimited', '100')"
+                class="w-full py-3 bg-gradient-to-r from-yellow-500 to-amber-600 hover:from-yellow-400 hover:to-amber-500 rounded-xl font-bold transition shadow-lg shadow-yellow-500/25 text-black">
+                Loading...
+            </button>
+        </div>
+    </div>
+
+    <div class="text-center text-gray-500 text-sm mb-8">
+        <p><i class="fas fa-lock mr-2"></i>Secure Payment via Bkash / Nagad Personal</p>
+    </div>
+
+    <div id="modal"
+        class="fixed inset-0 z-50 hidden bg-black/90 backdrop-blur-sm flex items-center justify-center p-4 animate__animated animate__fadeIn">
+        <div
+            class="w-full max-w-md glass-card bg-[#1e293b] rounded-2xl p-0 border border-gray-700 overflow-hidden shadow-2xl animate__animated animate__zoomIn">
+
+            <div
+                class="bg-gradient-to-r from-gray-800 to-gray-900 p-6 border-b border-gray-700 flex justify-between items-center">
+                <div>
+                    <h3 class="text-xl font-bold text-white">Complete Payment</h3>
+                    <p class="text-xs text-violet-400 font-bold uppercase tracking-wider mt-1">Plan: <span
+                            id="modalPlanName">...</span></p>
+                </div>
+                <button onclick="document.getElementById('modal').classList.add('hidden')"
+                    class="w-8 h-8 rounded-full bg-gray-700 hover:bg-red-500/20 hover:text-red-500 flex items-center justify-center transition">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <div class="p-6">
+                <div class="mb-6 bg-blue-900/20 border border-blue-500/30 rounded-xl p-4">
+                    <p class="text-gray-300 text-sm mb-3">Please <b>Send Money</b> to any active number below:</p>
+
+                    <div id="methodList" class="space-y-2">
+                        <div class="animate-pulse flex space-x-4">
+                            <div class="flex-1 space-y-2 py-1">
+                                <div class="h-8 bg-gray-700 rounded"></div>
+                                <div class="h-8 bg-gray-700 rounded"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex justify-between items-center mb-6 px-2">
+                    <span class="text-gray-400">Total Amount:</span>
+                    <span class="text-2xl font-bold text-white" id="payAmount">৳0</span>
+                </div>
+
+                <form class="space-y-4" onsubmit="submitPayment(event)">
+                    <div>
+                        <label class="block text-xs font-bold text-gray-500 uppercase mb-1 ml-1">Your Sender
+                            Number</label>
+                        <input type="tel" id="senderNum" placeholder="e.g. 017xxxxxxxx"
+                            class="w-full bg-gray-900 border border-gray-700 rounded-xl p-3 text-white outline-none focus:border-violet-500 transition"
+                            required>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-500 uppercase mb-1 ml-1">Transaction ID
+                            (TrxID)</label>
+                        <input type="text" id="trxID" placeholder="e.g. 8N7..."
+                            class="w-full bg-gray-900 border border-gray-700 rounded-xl p-3 text-white outline-none focus:border-violet-500 uppercase transition"
+                            required>
+                    </div>
+
+                    <button type="submit"
+                        class="w-full py-4 bg-green-600 hover:bg-green-500 text-white font-bold rounded-xl shadow-lg shadow-green-600/20 transition transform active:scale-95 flex justify-center items-center gap-2">
+                        <span>Submit Verification</span>
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/ui-utils.js"></script>
+    <script>
+        // Store interval ID to clear it when re-rendering
+        let countdownInterval = null;
+
+        // 🔥 1. INIT PAGE (SYNC DATA) 🔥
+        async function initPage() {
+            loadPlans(); // Fetch Dynamic Plan Config
+
+            const localUser = JSON.parse(localStorage.getItem('shamim_user'));
+            if (!localUser) {
+                window.location.href = 'index.html'; // Auth Gate
+                return;
+            }
+
+            // Show loading state initially if needed, or just rely on renderPlanStatus
+            // Fetch FRESH data from server to fix sync issues
+            try {
+                const res = await fetch(`/api/user?username=${localUser.username}`);
+                const data = await res.json();
+
+                if (data.success) {
+                    // Update LocalStorage with FRESH data
+                    localStorage.setItem('shamim_user', JSON.stringify(data.user));
+                    renderPlanStatus(data.user);
+                } else {
+                    // Fallback to local if server fails (rare)
+                    renderPlanStatus(localUser);
+                }
+            } catch (e) {
+                console.error("Sync Failed", e);
+                renderPlanStatus(localUser);
+            }
+        }
+
+        // 🔥 2. RENDER PLAN STATUS (UI LOGIC) 🔥
+        function renderPlanStatus(user) {
+            // Plan Cards IDs (Assuming your HTML has these IDs or we select by logic)
+            // Since the original HTML didn't show IDs for cards, we'll assume we need to add IDs or select them by content.
+            // Let's rely on adding IDs to the cards in a separate step or select them carefully.
+            // Actually, to be safe, I will inspect the HTML structure again or easier: 
+            // I will add IDs to the plan cards in the HTML structure first? 
+            // No, I can try to find them by text content or attributes. 
+            // Wait, looking at the previous file_view, the cards are just in a grid.
+            // Better approach: Re-render the buttons only, based on their position/type.
+
+            // Map plan types to Card Indices (0: Free, 1: Pro, 2: Agency)
+            const cards = document.querySelectorAll('.max-w-7xl.grid > div');
+            // Note: The grid has 3 columns.
+            if (cards.length < 3) return; // Safety
+
+            const freeBtn = cards[0].querySelector('button');
+            const proBtn = cards[1].querySelector('button');
+            const vipBtn = cards[2].querySelector('button');
+
+            // 🔥 ADMIN EXEMPTION 🔥
+            if (user.role === 'admin' || user.role === 'superadmin') {
+                [freeBtn, proBtn, vipBtn].forEach(btn => {
+                    btn.className = "w-full py-3 rounded-lg border border-yellow-500/30 bg-yellow-500/10 text-yellow-400 font-bold cursor-default";
+                    btn.innerHTML = `<i class="fas fa-crown mr-2"></i> System Master`;
+                    btn.onclick = null;
+                });
+                return;
+            }
+
+            // FREE PLAN Logic
+            if (user.plan === 'free') {
+                setActiveButton(freeBtn, "Current Active Plan");
+                setUpgradeButton(proBtn, "Upgrade to Pro", 'pro', 50);
+                setUpgradeButton(vipBtn, "Upgrade to VIP", 'vip', 100);
+            }
+            // PRO PLAN Logic
+            else if (user.plan === 'pro') {
+                setDowngradeButton(freeBtn, "Downgrade to Free (Next Cycle)");
+                setActiveButton(proBtn, "Active Plan", user.expiryDate);
+                setUpgradeButton(vipBtn, "Upgrade to VIP", 'vip', 100);
+            }
+            // VIP PLAN Logic
+            else if (user.plan === 'vip') {
+                setDowngradeButton(freeBtn, "Downgrade to Free");
+                setDowngradeButton(proBtn, "Downgrade to Pro");
+                setActiveButton(vipBtn, "Active Plan", user.expiryDate);
+            }
+        }
+
+        function setActiveButton(btn, text, expiryDate = null) {
+            // Style for Active
+            btn.className = "w-full py-3 rounded-lg border-2 border-green-500 bg-green-500/10 text-green-400 font-bold cursor-default hover:bg-green-500/20";
+            btn.innerHTML = `<i class="fas fa-check-circle mr-2"></i>${text}`;
+            btn.onclick = null; // Disable click
+
+            // Live Timer Logic
+            if (expiryDate) {
+                if (countdownInterval) clearInterval(countdownInterval);
+
+                const updateTimer = () => {
+                    const now = new Date();
+                    const end = new Date(expiryDate);
+                    const diff = end - now;
+
+                    if (diff <= 0) {
+                        btn.innerText = "Plan Expired - Refreshing...";
+                        clearInterval(countdownInterval);
+                        setTimeout(() => location.reload(), 2000); // Auto refresh to sync downgrade
+                        return;
+                    }
+
+                    const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+                    const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                    const s = Math.floor((diff % (1000 * 60)) / 1000);
+
+                    btn.innerHTML = `<div class="flex flex-col items-center leading-tight">
+                        <span class="text-xs uppercase opacity-70 mb-1">Expires in</span>
+                        <span class="font-mono text-lg font-bold tracking-widest">${d}d ${h}h ${m}m ${s}s</span>
+                    </div>`;
+                };
+
+                updateTimer(); // Run once immediately
+                countdownInterval = setInterval(updateTimer, 1000);
+            } else if (text !== "Current Active Plan") {
+                btn.innerHTML = `<i class="fas fa-infinity mr-2"></i>Lifetime Active`;
+            }
+        }
+
+        function setUpgradeButton(btn, text, plan, price) {
+            btn.className = "w-full py-3 rounded-lg bg-gradient-to-r from-blue-600 to-violet-600 hover:from-blue-500 hover:to-violet-500 text-white font-bold transition transform hover:scale-[1.02] active:scale-95 shadow-lg shadow-blue-500/25";
+            btn.innerHTML = text; // Reset content
+            btn.onclick = () => openModal(plan.charAt(0).toUpperCase() + plan.slice(1), price);
+        }
+
+        function setDowngradeButton(btn, text) {
+            btn.className = "w-full py-3 rounded-lg border border-gray-600 hover:border-gray-500 text-gray-400 hover:text-white transition";
+            btn.innerHTML = text;
+            btn.onclick = () => showToast("Contact Admin to Downgrade", "info");
+        }
+
+        // --- EXISTING MODAL LOGIC (Kept & Helper functions) ---
+        async function openModal(planName, price) {
+            const modal = document.getElementById('modal');
+            const list = document.getElementById('methodList');
+
+            // Set UI Data
+            document.getElementById('modalPlanName').innerText = planName;
+            document.getElementById('payAmount').innerText = '৳' + price;
+            modal.classList.remove('hidden');
+
+            // Fetch Methods from API (Dynamic)
+            list.innerHTML = '<p class="text-center text-xs text-gray-500">Loading methods...</p>';
+
+            try {
+                const res = await fetch('/api/payment-methods');
+                const data = await res.json();
+                list.innerHTML = '';
+
+                if (data.methods.length === 0) {
+                    list.innerHTML = `
+                        <div class="bg-red-500/10 border border-red-500/30 rounded p-3 text-center">
+                            <p class="text-red-400 text-sm font-bold">No payment methods available.</p>
+                            <p class="text-xs text-red-300">Please contact support.</p>
+                        </div>`;
+                    return;
+                }
+
+                data.methods.forEach(m => {
+                    // Check provider to add icon
+                    let icon = 'fas fa-wallet';
+                    let color = 'text-gray-400';
+                    if (m.provider.toLowerCase().includes('bkash')) { icon = 'fas fa-b'; color = 'text-pink-500'; }
+                    if (m.provider.toLowerCase().includes('nagad')) { icon = 'fas fa-n'; color = 'text-orange-500'; }
+
+                    list.innerHTML += `
+                        <div class="group flex justify-between items-center bg-gray-800 hover:bg-gray-750 p-3 rounded-lg border border-gray-600 hover:border-violet-500 cursor-pointer transition" onclick="copyNumber('${m.number}')">
+                            <div class="flex items-center gap-3">
+                                <div class="w-8 h-8 rounded bg-gray-700 flex items-center justify-center ${color} font-bold text-lg">
+                                    <i class="${icon}"></i>
+                                </div>
+                                <div>
+                                    <p class="font-bold text-sm text-white">${m.provider}</p>
+                                    <p class="font-mono text-violet-300 text-sm">${m.number}</p>
+                                </div>
+                            </div>
+                            <span class="text-xs bg-gray-700 text-gray-300 px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition">Click Copy</span>
+                        </div>
+                    `;
+                });
+            } catch (err) {
+                list.innerHTML = '<p class="text-red-400 text-center text-sm">Failed to load numbers.</p>';
+            }
+        }
+
+        function copyNumber(num) {
+            navigator.clipboard.writeText(num);
+            showToast('Number Copied: ' + num);
+        }
+
+        async function submitPayment(e) {
+            e.preventDefault();
+            const btn = e.target.querySelector('button');
+            const originalContent = btn.innerHTML;
+
+            // Get Data
+            const planName = document.getElementById('modalPlanName').innerText;
+            const amount = document.getElementById('payAmount').innerText.replace('৳', '');
+            const senderNum = document.getElementById('senderNum').value;
+            const trxID = document.getElementById('trxID').value;
+            const user = JSON.parse(localStorage.getItem('shamim_user'));
+
+            if (!senderNum || !trxID) { showToast('Please fill all fields', 'error'); return; }
+
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Sending Request...';
+
+            try {
+                const res = await fetch('/api/submit-payment', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        username: user.username,
+                        method: 'Manual (Bkash/Nagad)',
+                        number: senderNum,
+                        trxId: trxID,
+                        amount: amount,
+                        plan: planName
+                    })
+                });
+
+                const data = await res.json();
+
+                if (data.success) {
+                    showToast(data.message + ' Admin will verify it shortly.', 'success');
+                    document.getElementById('modal').classList.add('hidden');
+                    e.target.reset();
+                } else {
+                    showToast(data.message, 'error');
+                }
+
+            } catch (err) {
+                showToast('Server Error. Please try again.', 'error');
+            }
+
+            btn.disabled = false;
+            btn.innerHTML = originalContent;
+        }
+
+        // --- DYNAMIC PLANS ---
+        async function loadPlans() {
+            try {
+                const res = await fetch('/api/get-plans');
+                const data = await res.json();
+                if (data.success) {
+                    const p = data.plans;
+
+                    // Helper for Storage
+                    const formatStorage = (mb) => mb >= 1024 ? (mb / 1024).toFixed(1) + ' GB' : mb + ' MB';
+
+                    // FREE
+                    document.getElementById('free-project-limit').innerHTML = `<i class="fas fa-check-circle check"></i> <b>${p.free.max_projects} Project${p.free.max_projects > 1 ? 's' : ''}</b> Hosting`;
+                    document.getElementById('free-storage-limit').innerHTML = `<i class="fas fa-hdd text-gray-500"></i> ${formatStorage(p.free.storage)} Storage Limit`;
+
+                    // PRO
+                    document.getElementById('price_pro').innerText = '৳' + p.pro.price;
+                    document.getElementById('duration_pro').innerText = '/ ' + p.pro.duration + ' days';
+                    document.getElementById('pro-project-limit').innerHTML = `<i class="fas fa-check-circle check"></i> <b>${p.pro.max_projects} Active Projects</b> Hosting`;
+                    document.getElementById('pro-storage-limit').innerHTML = `<i class="fas fa-check-circle check"></i> <b>${formatStorage(p.pro.storage)}</b> Storage Limit`;
+                    // Update Button Onclick
+                    document.getElementById('btn_pro').onclick = () => openModal('Pro Developer', p.pro.price);
+
+                    // VIP
+                    document.getElementById('price_vip').innerText = '৳' + p.vip.price;
+                    document.getElementById('duration_vip').innerText = '/ ' + p.vip.duration + ' days';
+
+                    const vipProjText = p.vip.max_projects === -1 ? 'Unlimited' : p.vip.max_projects;
+                    document.getElementById('vip-project-limit').innerHTML = `<i class="fas fa-infinity text-yellow-500"></i> <b>${vipProjText}</b> Websites`;
+                    document.getElementById('vip-storage-limit').innerHTML = `<i class="fas fa-hdd text-yellow-500"></i> <b>${formatStorage(p.vip.storage)}</b> Premium Storage`;
+                    // Update Button Onclick
+                    document.getElementById('btn-vip').onclick = () => openModal('VIP Unlimited', p.vip.price);
+
+                    // Show content, hide loader
+                    document.getElementById('pricing-loader').classList.add('hidden');
+                    document.getElementById('pricing-cards-container').classList.remove('hidden');
+                }
+            } catch (e) { console.error("Plan Load Error", e); }
+        }
+
+        // Initialize Page
+        initPage();
+    </script>
+</body>
+
+</html>
